@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="robots" content="noindex,nofollow">	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0,user-scalable=0">
+	<meta charset="utf-8">
+	<link rel="canonical" href="https://pixworld.io/leviathamforo" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter">
+		<link rel="stylesheet" href="https://imgs1wo.e-droid3.net/js/swiper/7.0.1_swiper-bundle.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="https://imgs1wo.e-droid3.net/js/swiper/7.0.1_swiper-bundle.min.js"></script>
+    <style>
+    .centrat{
+		position: absolute;
+	    top: 50%;
+	    left: 50%;
+	   }
+	   
+	.boto{padding:10px 20px;border:none;background:none;background-color:#4CAF50;color:#FAFAFA;cursor:pointer;}
+	.boto_c{padding:10px 20px;border:none;background:none;background-color:#E0E0E0;color:#212121;cursor:pointer;}
+
+	/*Swipe*/
+	.swiper {
+	  width:300px;
+	  height: 100%;
+	  background-image:url(https://pixworld.io/img/fondo_avatars_4.png);
+	}
+
+	.swiper-slide {
+	  text-align: center;
+	  font-size: 14px;
+
+	  height:180px;
+	  /* Center slide text vertically */
+	  display: -webkit-box;
+	  display: -ms-flexbox;
+	  display: -webkit-flex;
+	  display: flex;
+	  -webkit-box-pack: center;
+	  -ms-flex-pack: center;
+	  -webkit-justify-content: center;
+	  justify-content: center;
+	  -webkit-box-align: center;
+	  -ms-flex-align: center;
+	  -webkit-align-items: center;
+	  align-items: center;
+	}
+
+	img.av{max-width:50px;max-height:50px;user-select:none;}
+	.font_literal{font-size:large;font-weight:bold;}
+.font_literal_g{font-size:x-large;font-weight:bold;}
+.font_literal_p{font-size:small;}
+.font_literal_pp{font-size:x-small;}
+.boto{padding:10px 20px;border:none;background:none;background-color:#4CAF50;color:#FAFAFA;cursor:pointer;}
+.boto_g{padding:10px 20px;border:none;background:none;background-color:#4CAF50;color:#FAFAFA;font-size:large;cursor:pointer;}
+.boto_cancel{padding:10px 20px;border:none;background:none;background-color:#E0E0E0;color:#212121;font-size:large;cursor:pointer;}
+
+.tprinc{width:80%;max-width:400px;margin-top:50px;border:0;}
+@media all and (max-height: 500px){
+  .tprinc{margin-top:10px;}
+}
+
+/*Modal*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+	font-family:arial;
+	font-size:medium;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+@media all and (max-width: 500px){
+  .modal-content{width:80%;}
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+	
+    </style>
+</head>
+<body style="margin:0;padding:0;background-color:#000000;"><div id="divprinc"></div>
+
+<span style="font-family:Raleway;position:absolute;top:0;left:0;z-index:-1">.</span>
+<span style="font-family:Bitter;position:absolute;top:0;left:0;z-index:-1">.</span>
+
+<div id="divmodal" class="modal" style="display:none;" onclick="this.style.display='none';if(quitar_pausa){f_pausar(false);quitar_pausa=false;};">
+  <div id="divmodalcontent" class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modaltxt"></p>
+  </div>
+</div>
+
+<table id="divmsg" class="centrat" style="display:none;z-index:999999;margin-top:-100px;margin-left:-138px;border:1px solid #000000;border-radius:10px;padding:10px;background-color:#FFFFFF;">
+<tr>
+<td><input type="text" name="msg" id="msg" value="" style="border:1 solid #333333;width:200px;font-family:'Raleway', sans-serif;font-size:12px;padding:5px;" /></td>
+<td><img src="https://imgs1wo.e-droid3.net/img/bubble.png" style="border:0;width:30px;cursor:pointer;position:relative;top:2px;" onclick="f_enviarmsg()"></td>
+</tr>
+</table>
+
+<table id="divloader" class="centrat" style="display:none;z-index:999999;margin-top:-25px;margin-left:-25px;border:0;">
+<tr>
+<td><img src="https://imgs1wo.e-droid3.net/img/loader_n.gif" style="border:0;width:50px;"></td>
+</tr>
+</table>
+
+
+<script type="text/javascript">
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var expires="expires=";
+    if(exdays>0)
+	{
+		var d = new Date();
+		d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    	expires = "expires="+ d.toUTCString();
+    }
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/; samesite=None; Secure";
+}
+
+
+
+
+function cambio_mapa_2(js)
+{
+		if(playerMap)
+	{
+		var keys_aux=Object.keys(playerMap);
+		for(var i=0;i<keys_aux.length;i++)
+		{
+			if(playerMap[keys_aux[i]].emitter){playerMap[keys_aux[i]].emitter.remove();};
+			playerMap[keys_aux[i]].container.destroy();
+		};
+		playerMap={};
+	};
+	//Desde que es pot canviar de avatar no buidem larray: avatars={};
+	
+	if(enemies)
+	{
+		var keys_aux=Object.keys(enemies);
+		for(var i=0;i<keys_aux.length;i++)
+		{
+			enemies[keys_aux[i]].hb.bar.destroy();
+	    			};
+		enemies={};
+	};
+
+	pushables={};
+	outs=[];
+	//Se te que mantenir per saber si sha pagat o no: outs_info={};
+	layer=undefined;
+	ts_ids=[];
+	ts_ids_n=0;
+	depth=0;
+	if(group_obj){group_obj.clear(false,true);};	if(group_pushable){group_pushable.clear(false,true);};
+	if(group_monedas)
+	{
+		group_monedas.children.iterate(function (child) {
+	        child.texto.destroy();
+	    });
+		group_monedas.clear(false,true);
+	};
+	if(groups_balas_av)	{
+		var keys_aux=Object.keys(groups_balas_av);
+		for(var i=0;i<keys_aux.length;i++)
+		{
+			groups_balas_av[keys_aux[i]].clear(true,true);
+			//no pq. fa petar: groups_balas_av[keys_aux[i]].destroy(true);
+		}
+		groups_balas_av={};
+	}
+	if(groups_balas)	{
+		var keys_aux=Object.keys(groups_balas);
+		for(var i=0;i<keys_aux.length;i++)
+		{
+			groups_balas[keys_aux[i]].clear(true,true);
+			//no pq. fa petar: groups_balas[keys_aux[i]].destroy(true);
+		}
+		groups_balas={};
+	}
+	if(group_sprites){group_sprites.clear(false,true);};
+	if(group_enemies){group_enemies.clear(false,true);};
+	my_enemies={};
+	x_old=0,y_old=0;
+	cambio_tileini=false;
+	cambio_tilegen=false;
+	tileini_x=-1,tileini_y=-1;
+	tilegen_x=-1,tilegen_y=-1;
+
+		if(map){map.removeAllLayers();};
+	
+	if(img_fondo)	{
+				img_fondo.destroy();
+		img_fondo=null;
+	}
+
+		//console.log("exec js");
+	var F=new Function (js);
+	F();
+}
+
+function cambio_mapa(idout,pagar)
+{
+	//console.log("cambio_mapa idout:"+idout);
+	
+	var idmapa_dest=outs_info[""+idout].idmapa_dest;
+	var precio=outs_info[""+idout].p;
+	var precio_msg=outs_info[""+idout].p_msg;
+	var pagado=outs_info[""+idout].pagado;
+
+	if(precio>0 && !pagado && !pagar)
+	{
+		f_pausar(true);
+		
+		var msg=precio_msg;
+		if(msg=="")
+		{
+			msg="Monedas para acceder";		}
+		
+		var btn_pay="";
+		var insuf="";
+		var monedas_self=playerMap[idself].mo;
+		if(monedas_self>=precio)
+		{
+			btn_pay="<button class='boto nopropag' onclick='outs_info["+idout+"].pagado=true;cambio_mapa("+idout+",true)'>OK, pagar</button>&nbsp;";
+		}
+		else
+		{
+			insuf="<p align='center' style='font-style:italic'>(Monedas insuficientes)</p>";
+		}
+		
+		quitar_pausa=true;//Per quan se tanqui el modal tregui el modo pausa
+
+		falert("<p align='center' style='text-align:center;'>"+msg+"</p>"+
+		    "<p align='center'><table align='center' style='border:0;font-weight:bold;font-size:larger;'><tr><td><img src='https://imgs1wo.e-droid3.net/img/coin_48.png' style='border:0'></td><td>&nbsp;X&nbsp;"+precio+"</td></tr></table></p>"+
+		    insuf+
+			"<p align='center' style='padding-top:10px;'>"+btn_pay+"<button class='boto_c'>Cerrar</button></p>");
+	}
+	else
+	{
+				escena.cameras.main.once('camerafadeoutcomplete', function (camera) {
+			$("#divloader").show();
+            escena.scene.pause();
+
+						var aux1="";
+			if(!js_maps[idmapa_dest]){aux1="&comp=1";};
+
+		    $.ajax({
+		      type: "POST",
+		      url: "https://pixworld.io/js/mapa_info.php?idp=1443074&idout="+idout+aux1,
+		      data: $("#fapp").serialize(),
+		      success: function(result) {
+		      	//alert(result);
+				var pos=result.indexOf("-OKFIN-");
+				if(pos!==-1)
+				{
+					if(!js_maps[idmapa_dest])
+					{
+						var js=result.substr(0,pos);
+						js_maps[idmapa_dest]=js;
+					};
+
+					cambio_mapa_2(js_maps[idmapa_dest]);
+				}
+				//$("#loader").css('visibility', 'hidden');
+		      }
+		     });
+        });
+    	escena.cameras.main.fadeOut(200);
+	};
+}
+
+function f_pausar(modo)
+{
+	if(modo)
+	{
+		pausado=true;
+	}
+	else
+	{
+		pausado=false;
+	}
+}
+
+$(document).ready(function(){
+
+	$(".nopropag").click(function(event){event.stopPropagation();});
+	
+	swiper = new Swiper('.swiper', {
+	  slidesPerView: 4,
+	  spaceBetween: 94,
+	  centeredSlides: true,
+	  slideToClickedSlide: true,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      }
+	 	});
+
+
+	
+		setTimeout(function () {
+	        let viewheight = $(window).height();
+	        let viewwidth = $(window).width();
+	        let viewport = document.querySelector("meta[name=viewport]");
+	        viewport.setAttribute("content", "height=" + viewheight + "px,width=" + viewwidth + "px,initial-scale=1.0,maximum-scale=1.0,user-scalable=0");
+	    }, 300);
+	    
+});
+
+//var canvas_w=800,canvas_h=608;
+var canvas_w=Math.min(window.innerWidth,1216);
+var canvas_h=Math.min(window.innerHeight,1216);
+
+var map_w=1216,map_h=1216;//Ferho multiple del size dels tiles
+
+var config = {
+    type: Phaser.AUTO,
+    width: canvas_w,
+    height: canvas_h,
+	//canvasStyle: "position:relative;top:-50px",
+	/*callbacks: {
+        postBoot: function(){var aux1=$("canvas").offset().top;
+			$("canvas").css({"position":"relative","top":"-"+aux1+"px"});}
+        //postBoot: NOOP
+    },*/
+	parent:"divprinc",
+    physics: {
+        default: "arcade",
+        arcade: {
+            gravity: { y: 0 },
+            debug: false        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    },
+    pixelArt: true,    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+    autoFocus:true
+};
+
+var finalizando=false;
+var pausado=false;
+var quitar_pausa=false;//Si es true, quan es tanque el modal treu el modo pausa
+var playerMap={},pushables={},enemies={},js_maps={},avatars={};
+var outs=[];var outs_info={};var img_fondo;
+var game = new Phaser.Game(config);
+var escena;
+var map;
+var layer;
+var ts_ids=[];
+var ts_ids_n=0;
+var depth=0;
+var group_obj;
+var group_pushable;
+var group_monedas;
+var groups_balas_av={};
+var groups_balas={};
+var group_sprites;
+var group_enemies;
+var my_enemies={};var x_old=0,y_old=0;
+var idself=-1;
+var orientation_self=0*0.01745;
+var b_damage,b_speed;//ARA NO ES TE QUE UTILITZAR A CAP LLOC. BORRAR.
+var cambio_tileini=false;var cambio_tilegen=false;var tileini_x=-1,tileini_y=-1;
+var tilegen_x=-1,tilegen_y=-1;
+var text_shot,circle_shot,circle_shot_0,circle_shot_1;
+var wc_txt_mapa,img_info;
+var key_shot;
+var loadingText,loading_progressBar,loading_progressBox;
+var prim_pre_complete=true;
+
+function falert(cad)
+{
+	document.getElementById("modaltxt").innerHTML=cad;
+	document.getElementById('divmodal').style.display="block";
+}
+
+function f_bg_loaded(idmap)
+{
+	img_fondo=escena.add.image(0, 0, "bg"+idmap);
+	img_fondo.setOrigin(0, 0);
+	img_fondo.depth=-1;
+}
+
+function colocar_enemy_2(x,y,obj,prop)
+{
+	//console.log("enemy obj:"+obj+" prop.id:"+prop.id);
+	
+	if(prop.es_anim==1)
+	{
+		if(prop.sp>0)//Tenir en conte que en altres lloc utilitzo el .sp>0 per saber si es un follower
+		{
+			object1=escena.add.follower(null, x, y, obj);
+			escena.physics.world.enable(object1);
+		}
+		else{object1=escena.physics.add.sprite(x,y,obj,1);};
+		object1.es_anim=1;
+		if(!escena.anims.exists("esquerra_"+obj+"_1"))
+		{
+			//console.log("Creem animacio de enemic "+obj);
+			crear_anim(obj,true,"_1",3);
+			crear_anim(obj,true,"_2",5);
+			crear_anim(obj,true,"_3",10);
+		}
+	}
+	else
+	{
+		if(prop.sp>0)
+		{
+			object1=escena.add.follower(null, x, y, obj);
+			escena.physics.world.enable(object1);
+		}
+	    else{object1 = escena.physics.add.image(x,y,obj);};
+	    object1.es_anim=0;
+	};
+
+	object1.imagen=obj;
+    group_enemies.add(object1);
+    enemies[prop.id]=object1;
+    object1.wo_id=prop.id;
+	object1.wo_n_arr=group_enemies.getLength()-1;
+	object1.prop=prop;
+	object1.fult_shot=0;
+	object1.resuc=false;	object1.muerto=false;	object1.es_enemy=true;
+	object1.setDepth(999996);
+	object1.hb_offset=(prop.h/2)+18;
+	var hb=new HealthBar(escena, 0, 0,prop.hb_s);	hb.bar.x=x-40;
+	hb.bar.y=y-object1.hb_offset;
+	hb.bar.setDepth(999996);
+	hb.es_hb=1;
+	hb.value=prop.hb_v;
+	hb.draw();
+	object1.hb=hb;
+	
+	
+}
+
+function colocar_obj_2(x,y,obj,id,es_anim,mass,drag,bounce,es_circular)
+{
+	//console.log("colocar_obj_2 obj:"+obj+" id:"+id);
+	var object1;
+	if(obj.substr(0,2)=="ob")
+	{
+		object1 = escena.physics.add.staticImage(x,y,obj);		depth++;
+		object1.setDepth(depth);
+		object1.setName(obj);
+	    group_obj.add(object1);
+	}
+	else
+	{
+				if(es_anim==1)
+		{
+			object1=escena.physics.add.sprite(x,y,obj,1);
+			object1.es_anim=1;
+			if(!escena.anims.exists("esquerra_"+obj+"_1"))
+			{
+				//console.log("Creem animacio de pushable "+obj);
+				crear_anim(obj,true,"_1",3);
+				crear_anim(obj,true,"_2",5);
+				crear_anim(obj,true,"_3",10);
+			}
+		}
+		else
+		{
+		    object1 = escena.physics.add.image(x,y,obj);
+		    object1.es_anim=0;
+		};
+	    //console.log("colocar_obj_2 obj:"+obj+" es_circular:"+es_circular+" w:"+object1.width+" mass:"+mass+" drag:"+drag+" bounce:"+bounce);
+	    if(es_circular==1){object1.setCircle(object1.width/2,0,0);};
+	    object1.setBounce(bounce/10);//Si es 1 no perd vel. al rebotar i si es menor si. OK
+	    object1.setMass(mass/5);
+	    object1.setDrag(drag*20);//Com mes drag mes rapid se frene. px/sec2
+	    object1.setMaxVelocity(200);
+		depth++;
+		object1.setDepth(depth);
+		object1.imagen=obj;
+	    group_pushable.add(object1);
+	    pushables[id]=object1;
+	    object1.wo_id=id;
+		object1.wo_n_arr=group_pushable.getLength()-1;
+		object1.wo_tmov="none";
+		object1.wo_tmov_prim=0;//1 o 0, per indicar si es el primer cop que senvie el mov local o no
+		object1.wo_tmov_ult=0;//timestamp(ms) quan has enviat el 1er toque
+	}
+}
+
+function afegir_tileset_3(id)
+{
+	map.addTilesetImage(id);//"mapa_"+
+ 	map.createBlankDynamicLayer(ts_ids_n, id,0,0,map.width,map.height);//"mapa_"+
+ 	ts_ids[id]=ts_ids_n;
+ 	ts_ids_n++;
+}
+
+//////////////////////////
+
+function afegir_jugador_2(id,es_nuevo,x,y,es_self,idavatar,nick,health,skulls,monedas)
+{
+	if(typeof id==='object' && id!==null)//Quan se ve desde el load se passe el this
+	{
+		es_nuevo=this.es_nuevo;
+		id=this.id;
+		x=this.x;
+		y=this.y;
+		es_self=this.es_self;
+		idavatar=this.idavatar;
+		nick=this.nick;
+		health=this.health;
+		skulls=this.skulls;
+		monedas=this.monedas;
+	};
+
+	if(!es_nuevo && playerMap && playerMap[id])
+	{
+				var p_aux=playerMap[id];
+		x=p_aux.container.x;
+		y=p_aux.container.y;
+		nick=p_aux.container.getAt(0).text;
+		if(p_aux.hb){health=p_aux.hb.value;};
+		skulls=p_aux.sk;
+		monedas=p_aux.mo;
+
+		if(playerMap[id].emitter){playerMap[id].emitter.remove();};
+		playerMap[id].container.destroy();
+	}
+
+	var av=avatars[idavatar+""];
+
+	var frame_w=Math.floor(av.w/3);
+	var frame_h=Math.floor(av.h/3);
+
+	var h_collider=frame_h/3;
+
+    var container = escena.add.container(x,y);
+    container.setSize(frame_w,h_collider);
+
+	    if(es_self){container.depth=999998;}    else{container.depth=999997;};
+
+	var y_text=-(frame_h/2)-15-h_collider;
+    var text=escena.add.text(0,y_text,nick,{fontFamily:"Raleway, sans-serif",fontSize:"12px"});//strokeThickness:1,stroke:"#000000"
+    text.x-=text.width/2;
+    container.add(text);
+
+    var bubble=escena.add.text(0,y_text-2, "",{padding:{x:2,y:2},backgroundColor:"#FFFFFF",color:"#000000",fontFamily:"Raleway, sans-serif",fontSize:"12px"});//fontFamily:"Tahoma, Geneva, sans-serif"
+    bubble.alpha=0;
+    container.add(bubble);
+    
+    var sprite=escena.add.sprite(0,-h_collider, "av"+idavatar, 0);
+    sprite.wo_id=id;
+    container.add(sprite);
+
+	var hb=null;
+	var text_sk=null;
+	var text_mo=null;
+
+	sprite.es_sprite=1;	group_sprites.add(sprite);
+			hb=new HealthBar(escena, -40, y_text-18,1);
+		hb.es_hb=1;
+		hb.value=health;
+		hb.draw();
+		container.add(hb.bar);
+
+				    var x_aux=0;y_aux=0;
+			x_aux=24;		    			var skull=escena.add.image(-30+x_aux,y_text-33+y_aux,"skull");
+			container.add(skull);
+			var skulls_aux=skulls;
+			if(skulls>999){skulls_aux="+1k";};
+		    text_sk=escena.add.text(-17+x_aux,y_text-40+y_aux,skulls_aux,{fontFamily:"Bitter, sans-serif",fontSize:"12px"});//strokeThickness:1,stroke:"#000000"
+		    container.add(text_sk);
+				
+	
+	playerMap[id]={container:container,idavatar:idavatar,hb:hb,sk:skulls,text_sk:text_sk,mo:monedas,text_mo:text_mo};
+
+		    if(!groups_balas_av[idavatar+""])
+	    {
+			groups_balas_av[idavatar+""] = escena.physics.add.group({
+		        defaultKey: "av"+idavatar+"_b",
+		        maxSize: 50 //OJO, NO PODRAN HAVER MES DE ESTES BALES A LHORA
+		    });
+		    escena.physics.add.collider(groups_balas_av[idavatar+""], group_obj, bala_impacto,null,escena);
+		    escena.physics.add.collider(groups_balas_av[idavatar+""], group_pushable, null,bala_impacto,escena);
+		    escena.physics.add.collider(groups_balas_av[idavatar+""], group_sprites, null,bala_impacto,escena);
+		    escena.physics.add.collider(groups_balas_av[idavatar+""], group_enemies, null,bala_impacto,escena);
+		};
+	
+
+    if(es_self)
+    {
+    	idself=id;
+    	escena.physics.world.enable(container);
+    	
+    	if(es_nuevo)    	{
+			tileini_x=Math.max(Math.ceil((container.body.x+container.body.width/2)/map.tileWidth)-1,0);
+	    	tileini_y=Math.max(Math.ceil((container.body.y+container.body.height/2)/map.tileHeight)-1,0);
+	       	tilegen_x=tileini_x;
+	    	tilegen_y=tileini_y;
+	    };
+
+    	container.body.setCollideWorldBounds(true);
+    	escena.physics.add.collider(container, group_obj);
+		/*var rect=escena.add.rectangle(0, 0, frame_w, 10, 0x6666ff);
+		escena.physics.add.existing(rect);
+		escena.physics.add.collider(rect, group_obj);
+		container.add(rect);*/
+
+    	escena.player=sprite;
+    	escena.container=container;
+		escena.cameras.main.startFollow(container);
+
+		escena.physics.add.collider(container,group_pushable,function (obj1,obj2)
+			{
+								if(obj1.wo_tmov && !obj2.wo_tmov){var obj_aux=obj1;obj1=obj2;obj2=obj_aux;};
+
+				//console.log("collider sp1:"+obj1.body.speed+ "sp2:"+obj2.body.speed);
+
+				if(obj1.body.speed>0)
+				{
+					//console.log("SP:"+obj1.body.speed);
+					if(true || obj1.body.speed>0)
+					{
+						/*if(obj2.wo_tmov!="local"){*/obj2.wo_tmov_ult=Date.now();//};
+						obj2.wo_tmov="local";
+						obj2.wo_tmov_prim=1;
+						if(obj2.tween){obj2.tween.stop();};
+					}
+				}
+			}
+		);
+    };
+    
+	//var r=Math.floor(Math.random() * (10 - 0) ) + 0;
+	r=10;
+	var col=(r/10) * 0xffffff;
+	text.setColor("#"+col.toString(16).substring(0,6));
+	//sprite.setTint(col);
+
+	//Si no existeix lanimacio de este avatar, la creem
+	if(!escena.anims.exists("esquerra_av"+idavatar))
+	{
+		//console.log("Creem animacio de avatar "+idavatar);
+		crear_anim("av"+idavatar,false,"",10);
+	}
+
+}
+
+function afegir_jugador(id,es_nuevo,x,y,es_self,idavatar,nick,health,skulls,monedas)
+{
+	
+	if(!avatars[idavatar+""]){return;};
+	var av=avatars[idavatar+""];
+	
+	var frame_w=Math.floor(av.w/3);
+	var frame_h=Math.floor(av.h/3);
+	if(!escena.textures.exists("av"+idavatar))
+	{
+		//console.log("afegim ss de avatar:"+idavatar);
+		var dyn_aux="";
+		if(av.es_dyn==1){dyn_aux="_dyn";};
+		escena.load.spritesheet("av"+idavatar, "https://imgs1wo.e-droid3.net/assets"+dyn_aux+"/avatar/av"+idavatar+"_"+av.cod+".png?v="+av.v,{ frameWidth: frame_w, frameHeight: frame_h });
+		if(av.t_bullet)
+		{
+			escena.load.image("av"+idavatar+"_b", "https://imgs1wo.e-droid3.net/assets"+dyn_aux+"/avatar/av"+idavatar+"_"+av.cod+"_b.png?v="+av.v);
+		};
+		escena.load.once('complete', afegir_jugador_2,{id:id,es_nuevo:es_nuevo,x:x,y:y,es_self:es_self,idavatar:idavatar,nick:nick,health:health,skulls:skulls,monedas:monedas});
+		escena.load.start();
+	}
+	else
+	{
+		afegir_jugador_2(id,es_nuevo,x,y,es_self,idavatar,nick,health,skulls,monedas);
+	}
+}
+
+function crear_anim(iditem,es_push,vel,rate)
+{
+	//iditem -> av+id (si es un avatar)
+	//vel -> en blanc, _1, _2 o _3
+
+	//console.log("crear_anim esquerra_"+iditem);
+
+	var frames_dreta=[];
+	var frames_adalt=[];
+	var frames_abaix=[];
+	if(es_push)
+	{
+		frames_dreta=[1, 4, 7];
+		frames_adalt=[2, 5, 8];
+		frames_abaix=[0, 3, 6];
+	}
+	else
+	{
+		frames_dreta=[1, 4, 1, 7];
+		frames_adalt=[2, 5, 2, 8];
+		frames_abaix=[0, 3, 0, 6];
+	}
+
+	//Animacions
+  escena.anims.create({
+    key: 'esquerra_'+iditem+vel,
+    frames: escena.anims.generateFrameNumbers(iditem, {
+      frames: frames_dreta
+    }),
+    frameRate: rate,
+    repeat: -1
+  });
+
+  escena.anims.create({
+    key: 'dreta_'+iditem+vel,
+    frames: escena.anims.generateFrameNumbers(iditem, {
+      frames: frames_dreta
+    }),
+    frameRate: rate,
+    repeat: -1
+  });
+
+  escena.anims.create({
+    key: 'adalt_'+iditem+vel,
+    frames: escena.anims.generateFrameNumbers(iditem, {
+      frames: frames_adalt
+    }),
+    frameRate: rate,
+    repeat: -1
+  });
+
+  escena.anims.create({
+    key: 'abaix_'+iditem+vel,
+    frames: escena.anims.generateFrameNumbers(iditem, {
+      frames: frames_abaix
+    }),
+    frameRate: rate,
+    repeat: -1
+  });
+
+}
+
+
+function mostrar_bubble(idplayer,cad)
+{
+	if(finalizando || playerMap[idplayer].finalizando){return;};
+	var nom=playerMap[idplayer].container.getAt(0);
+	var bubble=playerMap[idplayer].container.getAt(1);
+	bubble.setText(cad);
+	var sprite=playerMap[idplayer].container.getAt(2);
+	if(sprite.flipX)
+	{
+		bubble.displayOriginX=nom.width/2+bubble.width+2;
+	}
+	else
+	{
+		bubble.displayOriginX=(-nom.width/2)-2;
+	};
+	//bubble.visible=true;
+	if(bubble.tween)
+	{
+		bubble.tween.restart();
+		bubble.alpha=1;//pq. al restart passe a 0 pq. fa com si acabes de cop
+	}
+	else
+	{
+  		bubble.alpha=1;
+		bubble.tween=escena.tweens.add({
+          targets: bubble,
+          alpha: { from: 1, to: 0 },
+          delay:5000,
+          duration: 1000,
+          ease: 'Linear'
+        });
+    }
+}
+
+function f_enviarmsg()
+{
+	if(finalizando){return;};
+	var cad=$("#msg").val();
+	$("#divmsg").hide();
+	$("#msg").val("");
+	if(cad!="")
+	{
+		mostrar_bubble(idself,cad);
+		Client.socket.emit("chat_msg",cad);
+	}
+}
+
+function f_abrirchat()
+{
+	if(finalizando){return;};
+	if(!$("#divmsg").is(":visible")){$("#divmsg").show();};
+	if(!$("#msg").is(":focus")){$("#msg").focus();};
+}
+
+class HealthBar {
+
+    constructor (scene,x,y,do_draw)
+    {
+        this.bar = new Phaser.GameObjects.Graphics(scene);
+
+        this.x = x;
+        this.y = y;
+        this.value = 100;
+        this.p = 78 / 100;
+        this.do_draw=do_draw;
+        this.draw();
+
+        scene.add.existing(this.bar);
+    }
+
+    decrease (amount)
+    {
+        this.value -= amount;
+
+        if (this.value < 0)
+        {
+            this.value = 0;
+        }
+
+        this.draw();
+
+        return (this.value === 0);
+    }
+
+    draw ()
+    {
+    	if(!this.do_draw){return;};
+
+        this.bar.clear();
+
+        //  BG
+        this.bar.fillStyle(0x000000);
+        this.bar.fillRect(this.x, this.y, 80, 12);
+
+        //  Health
+
+        this.bar.fillStyle(0xffffff);
+        this.bar.fillRect(this.x + 1, this.y+1, 78, 10);
+
+        if(this.value>90){this.bar.fillStyle(0x00FF00);}
+        else if(this.value>80){this.bar.fillStyle(0x00FF00);}
+        else if(this.value>70){this.bar.fillStyle(0x00FF00);}
+        else if(this.value>60){this.bar.fillStyle(0x00FF00);}
+        else if(this.value>50){this.bar.fillStyle(0x00FF00);}
+        else if(this.value>40){this.bar.fillStyle(0x00FF00);}
+        else if(this.value>30){this.bar.fillStyle(0x00FF00);}
+        else if(this.value>20){this.bar.fillStyle(0xFF0000);}
+        else if(this.value>10){this.bar.fillStyle(0xFF0000);}
+        else{this.bar.fillStyle(0xFF0000);}
+
+        var d = Math.floor(this.p * this.value);
+
+        this.bar.fillRect(this.x + 1, this.y+1, d, 10);
+    }
+}
+
+function fmostrar(objeto,visible)
+{
+		if(objeto){objeto.muerto=!visible;};
+	if(objeto){objeto.setVisible(visible);};
+	if(objeto && objeto.hb && objeto.hb.bar){objeto.hb.bar.setVisible(visible);};
+	if(objeto.prop.m>0)
+	{
+		if(objeto && objeto.moneda){objeto.moneda.setVisible(visible);};
+		if(objeto && objeto.text_mo){objeto.text_mo.setVisible(visible);};
+	};
+}
+
+function bala_impacto(bala,obj)
+{
+	if(finalizando){return;};	
+	if(!bala.es_bala)
+	{
+		var aux1=obj;
+		obj=bala;
+		bala=aux1;
+	}
+
+	
+		if(!bala.active || (bala.id_e && !enemies[bala.id_e]) ||
+		(obj.es_sprite && bala.idp==obj.wo_id) ||
+		(obj.es_sprite && playerMap[obj.wo_id].finalizando) ||
+		(obj.es_enemy && bala.id_e && bala.id_e==obj.wo_id) || (obj.es_enemy && obj.muerto)){return false;};
+
+	if(bala.idp){groups_balas_av[playerMap[bala.idp].idavatar+""].killAndHide(bala);}
+	else{groups_balas[enemies[bala.id_e].imagen].killAndHide(bala);};
+	
+	if(bala.idp==idself && obj.es_sprite && obj.wo_id!=idself)
+	{
+				//es un altre avatar
+		var hb=playerMap[obj.wo_id].hb;
+		if(!hb){return false;};		var hb_value;
+		
+		var damage_aux=1000;
+		if(avatars[playerMap[obj.wo_id].idavatar+""].shot_damage_self==100){damage_aux=0;}
+		else if(avatars[playerMap[obj.wo_id].idavatar+""].shot_damage_self>0){damage_aux=Math.round(avatars[playerMap[bala.idp].idavatar+""].shot_damage_other*(50/avatars[playerMap[obj.wo_id].idavatar+""].shot_damage_self));};
+		
+		if(hb.decrease(damage_aux))
+		{
+	    	playerMap[obj.wo_id].container.destroy();
+
+	    					var p_from=playerMap[idself];
+				p_from.sk++;
+				if(p_from && p_from.text_sk)
+				{
+					p_from.text_sk.setText(p_from.sk);
+				};
+						
+					};
+		hb_value=hb.value;
+		var info={};
+		info["bala_idp"]=bala.idp;
+		info["idp"]=obj.wo_id;
+		info["health"]=hb_value;
+		Client.socket.emit('player_hit',info);
+	}
+
+	if(bala.idp==idself && obj.es_enemy)
+	{
+		
+		var hb=obj.hb;
+		if(!hb){return false;};
+		var hb_value;
+		var id_e=obj.wo_id;
+		
+		var damage_aux=1000;
+		if(obj.prop.s_d_s==100){damage_aux=0;}
+		else if(obj.prop.s_d_s>0){damage_aux=Math.round(avatars[playerMap[bala.idp].idavatar+""].shot_damage_other*(50/obj.prop.s_d_s));};
+		
+		if(hb.decrease(damage_aux))
+		{
+			var monedas=obj.prop.m;
+
+			//CASI IGUAL A 'enemy_hit'
+			if(obj.prop.r==1)
+			{
+				fmostrar(obj,false);
+				escena.time.delayedCall(obj.prop.r_d*1000, fmostrar,[obj,true], escena);
+				
+				if(obj.prop.sp>0 && obj.isFollowing())
+				{
+					if(obj.es_anim==1){obj.anims.stop();};
+					obj.stopFollow();
+				}
+
+				obj.hb.value=100;
+				obj.hb.draw();
+
+				if(obj.prop.sp>0 && (obj.x!=obj.prop.x_orig || obj.y!=obj.prop.y_orig))
+				{
+					obj.resuc=true;
+					//La unica forma que he trobat de canviarli la posicio es seguint un path
+					var points = [];
+					var path = new Phaser.Curves.Path(obj.x,obj.y);
+					var curve = new Phaser.Curves.Line([obj.x, obj.y, obj.prop.x_orig, obj.prop.y_orig]);
+					path.add(curve);
+				    obj.setPath(path);
+				    obj.startFollow({
+				        duration: 1,
+				        positionOnPath: true,
+				        onComplete: function (){
+							situar_hb(obj.hb.bar,obj.prop.x_orig-40,obj.prop.y_orig-obj.hb_offset);
+					    							}
+				    });
+				};
+			}
+			else
+			{
+		    	hb.bar.destroy();
+		    			    	obj.destroy();
+		    	
+		    	delete my_enemies[id_e];
+		    	delete enemies[id_e];
+		    };
+		    hb_value=0;//Tant si resucite com no enviem 0(ja el resucitarem al server)
+
+	    					var p_from=playerMap[idself];
+				p_from.sk++;
+				if(p_from && p_from.text_sk)
+				{
+					p_from.text_sk.setText(p_from.sk);
+				};
+						
+			var p_from=playerMap[idself];
+			p_from.mo+=monedas;
+			if(p_from && p_from.text_mo)
+			{
+				p_from.text_mo.setText(p_from.mo);
+			};
+
+
+		}
+		else
+		{
+			hb_value=hb.value;
+		}
+		
+		var info={};
+		info["bala_idp"]=bala.idp;
+		info["id_e"]=id_e;
+		info["health"]=hb_value;		Client.socket.emit('enemy_hit',info);
+	}
+
+	if(bala.id_e && obj.es_sprite && obj.wo_id==idself)
+	{
+				var hb=playerMap[obj.wo_id].hb;
+		if(!hb){return false;};		
+		var damage_aux=1000;
+		if(avatars[playerMap[idself].idavatar+""].shot_damage_self==100){damage_aux=0;}
+		else if(avatars[playerMap[idself].idavatar+""].shot_damage_self>0){damage_aux=Math.round(enemies[bala.id_e].prop.s_d_o*(50/avatars[playerMap[idself].idavatar+""].shot_damage_self));};
+		
+		hb.decrease(damage_aux);
+		hb_value=hb.value;
+
+		var info={};
+		info["bala_id_e"]=bala.id_e;
+		info["idp"]=obj.wo_id;
+		info["health"]=hb_value;
+		Client.socket.emit('player_hit',info);
+		if(hb_value==0)
+		{
+			//Desconectem(encara que igualment rebrem la ordre de desconn desde el server, pero aixo es mes rapid)
+			finalizando=true;
+			//self.location="https://pixworld.io/leviathamforo";
+			history.back();
+		};
+	}
+	return false;}
+
+function shot(idp,orientation,vel)
+{
+	if(finalizando){return;};
+	var cont=playerMap[idp].container;
+	if(!cont){return;};
+	var sprite=playerMap[idp].container.getAt(2);
+	if(!sprite){return;};
+	//console.log("pre get totalused:"+groups_balas_av[playerMap[idp].idavatar+""].getTotalUsed()+" lliures:"+groups_balas_av[playerMap[idp].idavatar+""].getTotalFree()+" actives:"+groups_balas_av[playerMap[idp].idavatar+""].countActive(true)+" inactives:"+groups_balas_av[playerMap[idp].idavatar+""].countActive(false));
+	bala=groups_balas_av[playerMap[idp].idavatar+""].get(sprite.x+cont.x,sprite.y+cont.y);
+	//console.log("after totalused:"+groups_balas_av[playerMap[idp].idavatar+""].getTotalUsed()+" lliures:"+groups_balas_av[playerMap[idp].idavatar+""].getTotalFree()+" actives:"+groups_balas_av[playerMap[idp].idavatar+""].countActive(true)+" inactives:"+groups_balas_av[playerMap[idp].idavatar+""].countActive(false));
+	if(typeof bala!=="undefined")
+	{
+		//console.log("disp:"+orientation);
+		bala.es_bala=1;
+		bala.idp=idp;
+		bala.setAngle(orientation);
+		if(orientation>90 && orientation<270){bala.flipY=true;}
+		else{bala.flipY=false;};
+		bala.setActive(true);		escena.physics.velocityFromRotation(orientation*0.01745,vel*10,bala.body.velocity);		bala.setVisible(true);
+		var info={};
+		info["idp"]=idp;
+		info["cont_x"]=cont.x;
+		info["cont_y"]=cont.y;
+		info["sprite_x"]=sprite.x;
+		info["sprite_y"]=sprite.y;
+		info["ori"]=orientation;
+		info["vel"]=vel;
+		return info;
+	}
+	else
+	{
+		console.log("bala undefined!");
+		return false;
+	}
+};
+
+function shot_from_enemy(ene,orientation,vel)
+{
+	if(finalizando){return;};
+	if(!ene){return false;};
+	var bala=groups_balas[ene.imagen].get(ene.x,ene.y);	if(bala)
+	{
+		//console.log("disp:"+orientation+" x:"+ene.x+" y:"+ene.y);
+		bala.es_bala=1;
+		bala.id_e=ene.wo_id;
+		bala.setAngle(orientation);
+		if(orientation>90 && orientation<270){bala.flipY=true;}
+		else{bala.flipY=false;};
+		bala.setActive(true);		escena.physics.velocityFromRotation(orientation*0.01745,vel*10,bala.body.velocity);
+		bala.setVisible(true);
+				var info={};
+		info["id_e"]=bala.id_e;
+		info["x"]=ene.x;
+		info["y"]=ene.y;
+		info["ori"]=orientation;
+		info["vel"]=vel;
+		return info;
+	}
+	else
+	{
+		return false;
+	}
+};
+
+function situar_hb(hb,x,y)
+{
+	hb.x=x;
+	hb.y=y;
+}
+
+function mod(a,n)
+{
+	return a - Math.floor(a/n)*n;
+}
+
+
+/////////////// IO ///////////////////
+var Client = {};
+Client.socket = io.connect("https://pixworld.io:3001",{query: 'ids=asykpzb3v7drme52ho0ctx64iuwqnj8f9l1g&idp=1443074'});
+
+Client.socket.on('disconnect', () => {
+	if(finalizando){return;};
+	console.log("disconnect");
+	//self.location="https://pixworld.io/leviathamforo";
+	history.back();
+});
+
+Client.socket.on('allpushables',function(data,ids_a){
+		//console.log("allpushables length: "+ids_a.length);
+    for(var i = 0; i < ids_a.length; i++){
+    	//console.log("pushable:"+ids_a[i]);
+    	var p=data[ids_a[i]+""];
+    	if(!p.elim){colocar_obj_2(p.x,p.y,p.img,ids_a[i],p.es_anim,p.mass,p.drag,p.bounce,p.es_circular);};
+    };
+	group_pushable.children.iterate(function (child) {
+	        child.setCollideWorldBounds(true);
+	    });
+});
+
+Client.socket.on('allmonedas',function(data){
+    for(var i = 0; i < data.length; i++){
+    	var p=data[i];
+    	var prop={x:p.x,y:p.y,v:p.v};
+    	        colocar_moneda(prop,false);
+    };
+});
+
+Client.socket.on('new_moneda',function(data){
+	//console.log("new_moneda");
+	colocar_moneda(data,true);
+});
+
+function colocar_moneda(prop,popup)
+{
+	var col=prop.x;
+	var fila=prop.y;
+	var x=prop.x*map.tileWidth+map.tileWidth/2;
+	var y=prop.y*map.tileHeight+map.tileHeight/2;
+	var object1 = escena.physics.add.image(x,y,"moneda");	object1.setDisplaySize(20,20);
+	object1.setCircle(24);
+	object1.valor=prop.v;
+	object1.texto=escena.add.text(x,y-8,prop.v,{fontFamily:"Bitter, sans-serif",fontSize:"12px",strokeThickness:1,stroke:"#000000"});//strokeThickness:1,stroke:"#000000"
+	object1.texto.x-=object1.texto.width/2;
+	object1.col=col;
+	object1.fila=fila;
+	group_monedas.add(object1);
+	
+	if(popup){escena.plugins.get('rexscaleplugin').popup(object1, 200);};
+
+}
+
+
+function f_player_tz()
+{
+			    history.back();
+	}
+
+function f_cambio_av(id,idavatar,pagado)
+{
+		if(!avatars[idavatar+""]){return;};//psac
+	var m_avatar=avatars[idavatar+""].m;
+	if(id==idself)
+	{
+		setCookie("av_player",idavatar,365*10);
+
+				if(avatars[playerMap[idself].idavatar+""].t_bullet==1 && avatars[idavatar+""].t_bullet==0)
+		{
+			if(!escena.sys.game.device.input.touch)
+			{
+				text_shot.setVisible(false);
+			}
+			else
+			{
+				circle_shot_0.setVisible(false);circle_shot_1.setVisible(false);circle_shot.setVisible(false);
+			};
+		}
+		else if(avatars[playerMap[idself].idavatar+""].t_bullet==0 && avatars[idavatar+""].t_bullet==1)
+		{
+			if(!escena.sys.game.device.input.touch)
+			{
+				text_shot.setVisible(true);
+			}
+			else
+			{
+				circle_shot_0.setVisible(true);circle_shot_1.setVisible(true);circle_shot.setVisible(true);
+			};
+		};
+		var mo_aux=0;
+		if(pagado){mo_aux=m_avatar;};
+		//console.log("idp:"+id+",idav:"+idavatar+",mo:"+mo_aux);
+		Client.socket.emit('cambio_av',{idp:id,idav:idavatar,mo:mo_aux});
+	};
+	
+	if(pagado)
+	{
+		var p=playerMap[id];
+		if(p)
+		{
+			p.mo-=m_avatar;
+			if(p.text_mo)
+			{
+				p.text_mo.setText(p.mo);
+			};
+		};
+	};
+	
+	afegir_jugador(id,false,0,0,id==idself,idavatar,"",0,0,0);
+}
+
+Client.socket.on('cambio_av',function(data){
+	if(finalizando){return;};
+    f_cambio_av(data.idp,data.idav,data.mo>0);
+});
+
+Client.socket.on('newplayer',function(data){
+	//console.log("newplayer: "+data.id+","+data.nick);
+	if(finalizando){return;};
+    afegir_jugador(data.id,true,data.x,data.y,false,data.idavatar,data.nick,data.health,data.skulls,data.monedas);
+});
+
+Client.socket.on('allplayers',function(data,idself){
+	//console.log("allplayers length: "+data.length);
+	
+	//AL FINAL INICIO EL JOC
+	
+	var nick_aux;
+    for(var i = 0; i < data.length; i++){
+    	//console.log("nick:"+data[i].nick);
+        afegir_jugador(data[i].id,true,data[i].x,data[i].y,data[i].id==idself,data[i].idavatar,data[i].nick,data[i].health,data[i].skulls,data[i].monedas);
+    }
+
+	Client.socket.on('new_msg',function(idplayer,cad)
+	{
+		if(finalizando){return;};
+		//console.log("new_msg de id: "+idplayer);
+		mostrar_bubble(idplayer,cad);
+	});
+
+   Client.socket.on('remove',function(id){
+   		if(finalizando){return;};
+   		//console.log("remove id: "+id);
+   	    if(playerMap[id])
+   	    {
+   	    	if(playerMap[id].finalizando){return;};	    	if(playerMap[id].container){playerMap[id].container.destroy();};
+	    }
+    });
+
+	function f_remove(id)
+	{
+		if(playerMap[id])
+		{
+			if(playerMap[id].emitter){playerMap[id].emitter.remove();};
+			if(playerMap[id].container){playerMap[id].container.destroy();};
+		}
+	}
+	
+   Client.socket.on('player_tz',function(id){
+   		if(finalizando){return;};
+   	    if(playerMap[id] && !playerMap[id].emitter)
+   	    {
+	    	if(playerMap[id].container && playerMap[id].container.getAt(2))
+			{
+				playerMap[id].finalizando=true;
+				playerMap[id].container.getAt(2).body.setEnable(false);//Per a que no es mogui si p.ex. li toque un pushable
+				if(playerMap[id].container.getAt(2).anims){playerMap[id].container.getAt(2).anims.stop();};
+				playerMap[id].container.getAt(2).body.setVelocity(0);
+			    if(!escena.particles){escena.particles = escena.add.particles('star');};
+			    playerMap[id].emitter = escena.particles.createEmitter();
+			    playerMap[id].emitter.setPosition(playerMap[id].container.getAt(2).body.x+playerMap[id].container.getAt(2).body.width/2, playerMap[id].container.getAt(2).body.y+playerMap[id].container.getAt(2).body.height/2);
+			    playerMap[id].emitter.setSpeed(200);
+			    playerMap[id].emitter.setFrequency(200);
+			    //playerMap[id].emitter.maxParticles=20;
+			    playerMap[id].emitter.setGravityY(300);
+			    playerMap[id].emitter.setEmitterAngle({ min: -135, max: -45 });
+			    playerMap[id].emitter.setBlendMode(Phaser.BlendModes.ADD);
+
+				setTimeout(f_remove,3000,id);
+				
+			};
+	    }
+    });
+
+
+			Client.socket.on('player_hit',function(data){
+			//console.log("player_hit: de:"+data.bala_idp+" a:"+data.idp+", health:"+data.health);
+			if(finalizando){return;};
+			var p=playerMap[data.idp];
+			if(p)
+			{
+				if(p.finalizando){return;};
+		    						if(p.hb.value>0 && data.health<=0)
+					{
+						var p_from=playerMap[data.bala_idp];
+						p_from.sk++;
+						if(p_from && p_from.text_sk)
+						{
+							p_from.text_sk.setText(p_from.sk);
+						};
+					};
+								
+				
+				p.hb.value=data.health;
+				p.hb.draw();
+				if(p.hb.value==0)
+				{
+					if(data.idp==idself)
+					{
+						//FALTE VEURE QUE FEM(De moment desconectem desde el server)
+					}
+					else
+					{
+				    	p.container.destroy();
+				    }
+				}
+			}
+		});
+
+		Client.socket.on('enemy_hit',function(data){
+			//console.log("enemy_hit: de:"+data.bala_idp+" a:"+data.id_e+", health:"+data.health);
+			if(finalizando){return;};
+			var ene=enemies[data.id_e];
+			if(ene)
+			{
+		    						if(ene.hb.value>0 && data.health<=0)
+					{
+						var p_from=playerMap[data.bala_idp];
+						p_from.sk++;
+						if(p_from && p_from.text_sk)
+						{
+							p_from.text_sk.setText(p_from.sk);
+						};
+					};
+								
+				if(ene.hb.value>0 && data.health<=0)
+				{
+					var p_from=playerMap[data.bala_idp];
+					p_from.mo+=ene.prop.m;
+					if(p_from && p_from.text_mo)
+					{
+						p_from.text_mo.setText(p_from.mo);
+					};
+				}
+
+				ene.hb.value=data.health;
+				ene.hb.draw();
+				if(ene.hb.value==0)
+				{
+					//Casi igual a bala_impacto
+					if(ene.prop.r==1)
+					{
+						fmostrar(ene,false);
+						escena.time.delayedCall(ene.prop.r_d*1000, fmostrar,[ene,true], escena);
+
+						if(ene.prop.sp>0 && ene.isFollowing())
+						{
+							if(ene.es_anim==1){ene.anims.stop();};
+							ene.stopFollow();
+						}
+
+						ene.hb.value=100;
+						ene.hb.draw();
+						if(ene.prop.sp>0 && (ene.x!=ene.prop.x_orig || ene.y!=ene.prop.y_orig))
+						{
+							ene.resuc=true;
+							//La unica forma que he trobat de canviarli la posicio es seguint un path
+							var points = [];
+							var path = new Phaser.Curves.Path(ene.x,ene.y);
+							var curve = new Phaser.Curves.Line([ene.x, ene.y, ene.prop.x_orig, ene.prop.y_orig]);
+							path.add(curve);
+						    ene.setPath(path);
+						    ene.startFollow({
+						        duration: 1,
+						        positionOnPath: true,
+						        onComplete: function ()
+								{
+									situar_hb(ene.hb.bar,ene.prop.x_orig-40,ene.prop.y_orig-ene.hb_offset);
+							    									},
+						    });
+						};
+					}
+					else
+					{
+				    	ene.hb.bar.destroy();
+				    					    	ene.destroy();
+
+				    	delete my_enemies[data.id_e];
+				    	delete enemies[data.id_e];
+				    }
+				}
+			}
+		});
+		
+	   Client.socket.on('shot',function(data){
+	   	    	   	    if(finalizando){return;};
+	   		//console.log("shot idp: "+data.idp);
+	   	    if(playerMap[data.idp])
+	   	    {
+	   	    	if(playerMap[data.idp].finalizando){return;};
+	   	    	var container=playerMap[data.idp].container;
+			    if(container.tween && container.tween.isPlaying()){container.tween.stop();};
+			    if(container.getAt(2).anims){container.getAt(2).anims.stop();};
+			    var sprite=container.getAt(2);
+
+				if(data.ori==0){sprite.setFrame(1);sprite.flipX=false;}
+			    else if(data.ori==90){sprite.setFrame(0);}
+			    else if(data.ori==180){sprite.setFrame(1);sprite.flipX=true;}
+			    else if(data.ori==270){sprite.setFrame(2);};
+
+				var tween = escena.tweens.add({
+				    targets: container,
+				    x: { from: container.x, to: data.cont_x },
+				    y: { from: container.y, to: data.cont_y },
+				    //onStart: function () {if(container.getAt(2)){container.getAt(2).anims.play(anim, true);};},
+				    onComplete: function () {shot(data.idp,data.ori,avatars[playerMap[data.idp].idavatar+""].shot_speed);},
+				    ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+				    duration: 200,
+				    repeat: 0,            // -1: infinity
+				    yoyo: false
+				});
+				container.tween=tween;
+
+		    }
+	    });
+	    
+	   Client.socket.on('shot_e',function(data){
+	   	    	   	    if(finalizando){return;};
+	   		//console.log("shot_e id_e: "+data.id_e);
+	   	    if(enemies[data.id_e])
+	   	    {
+	   	    	var enemy=enemies[data.id_e];
+			    /*if(enemy.tween && enemy.tween.isPlaying()){enemy.tween.stop();};
+			    if(enemy.anims){enemy.anims.stop();};*/
+
+				if(enemy.es_anim)
+				{
+					if(data.ori>315 || data.ori<45){enemy.setFrame(1);enemy.flipX=false;}
+				    else if(data.ori>=45 && data.ori<135){enemy.setFrame(0);}
+				    else if(data.ori>=135 && data.ori<225){enemy.setFrame(1);enemy.flipX=true;}
+				    else{enemy.setFrame(2);};
+				}
+
+				/*var tween = escena.tweens.add({
+				    targets: enemy,
+				    x: { from: enemy.x, to: data.x },
+				    y: { from: enemy.y, to: data.y },
+				    //onStart: function () {if(container.getAt(2)){container.getAt(2).anims.play(anim, true);};},
+				    onComplete: function () {shot_from_enemy(enemies[data.id_e],data.ori,data.vel);},
+				    ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+				    duration: 200,
+				    repeat: 0,            // -1: infinity
+				    yoyo: false
+				});
+				enemy.tween=tween;
+				*/
+				
+				if(enemy.prop.sp>0 && (enemy.x!=data.x || enemy.y!=data.y))
+				{
+					var points = [];
+					var path = new Phaser.Curves.Path(enemy.x, enemy.y);
+					var curve = new Phaser.Curves.Line([enemy.x, enemy.y, data.x, data.y]);
+					path.add(curve);
+				    enemy.setPath(path);
+				    enemy.startFollow({
+				        duration: 200,
+				        positionOnPath: true,
+				        onComplete: function (){
+				        								shot_from_enemy(enemies[data.id_e],data.ori,data.vel);
+							var enemy=enemies[data.id_e];
+							if(enemy.ruta)
+							{
+								var dim=Math.max(enemy.prop.w,enemy.prop.h);
+								var enemy_col=Math.max(Math.ceil(enemy.x/dim)-1,0);
+								var enemy_fila=Math.max(Math.ceil(enemy.y/dim)-1,0);
+								for(var i=0;i<enemy.ruta.length;i++)
+								{
+									if(i<enemy.ruta.length-1 && enemy.ruta[i].x==enemy_col && enemy.ruta[i].y==enemy_fila)
+									{
+																				var dim_2=Math.round(dim/2);
+
+										var points = [];
+
+										var path = new Phaser.Curves.Path(enemy.x,enemy.y);
+
+										for(var j=i+1;j<enemy.ruta.length;j++)
+										{
+											var elem_prev=enemy.ruta[j-1];
+											if(j==i+1)
+											{
+												var x_prev=enemy.x;
+												var y_prev=enemy.y;
+											}
+											else
+											{
+												//Convertim la col/fila a x/y
+												var x_prev=elem_prev.x*dim+dim_2;
+												var y_prev=elem_prev.y*dim+dim_2;
+											}
+
+											var elem=enemy.ruta[j];
+											//Convertim la col/fila a x/y
+											var x=elem.x*dim+dim_2;
+											var y=elem.y*dim+dim_2;
+											/*points.push(x);
+											points.push(y);*/
+											var curve = new Phaser.Curves.Line([x_prev, y_prev, x, y]);
+											path.add(curve);
+									    };
+									    //console.log("l:"+points.length+" i0:"+points[0]+","+points[1]+" i_ult:"+points[points.length-2]+","+points[points.length-1]);
+
+									    
+									    var sp_aux=100-enemy.prop.sp;
+									    if(sp_aux==0){sp_aux=1;}
+									    //else{sp_aux*=(Phaser.Math.Between(95,105)/100);};
+									    var duration = path.getLength()*sp_aux;
+									    enemy.setPath(path);
+									    //enemies[data.id].stopFollow();console.log("STOPPED "+path.startPoint.x);
+									    //enemies[data.id].setPosition(path.startPoint.x,path.startPoint.y);
+									    enemy.startFollow({
+									        duration: duration,
+									        positionOnPath: true,
+									        delay: 0
+									        //yoyo: true,
+									        //repeat: -1,
+									        //rotateToPath: true,
+									        //verticalAdjust: true
+									    });
+									}
+								}
+							}
+						},
+				    });
+				}
+				else
+				{
+					shot_from_enemy(enemies[data.id_e],data.ori,data.vel);
+				}
+
+
+		    }
+	    });
+
+	
+    Client.socket.on('move',function(data){
+    	if(finalizando){return;};
+    	//console.log("move id: "+data.id);
+	    var player = playerMap[data.id];
+	    if(!player){return;};
+	    if(player.finalizando){return;};
+	    var container=playerMap[data.id].container;
+	    if(!container){return;};
+	    var sprite=playerMap[data.id].container.getAt(2);
+	    if(!sprite){return;};
+	    
+	    	    if(player.mo!=data.monedas)
+	    {
+			//console.log("Act.monedes del:"+data.id+" a:"+data.monedas);
+			player.mo=data.monedas;
+			if(player.text_mo)
+			{
+				player.text_mo.setText(player.mo);
+			};
+		};
+
+	    
+	    var distance = Phaser.Math.Distance.Between(container.x,container.y,data.x,data.y);
+	    //orig: var duration = distance*10;
+	    //console.log("duration sp50:"+duration);
+	    
+	    var sp_aux=avatars[playerMap[data.id].idavatar+""].speed;
+		var duration = distance*10* ((100-Math.min(sp_aux,90))/50);
+		if(sp_aux<15 || sp_aux>85){duration*=2;}
+		else if(sp_aux<35 || sp_aux>65){duration*=1.2;}
+
+	    var anim="";
+	    if(data.x<container.x){anim="esquerra_av"+player.idavatar;sprite.flipX=true;}
+	    else if(data.x>container.x){anim="dreta_av"+player.idavatar;sprite.flipX=false;}
+	    else if(data.y<container.y){anim="adalt_av"+player.idavatar;}
+	    else{anim="abaix_av"+player.idavatar;};
+
+	    //if(player.tween && player.tween.isPlaying()){player.tween.stop();};
+		var tween = escena.tweens.add({
+		    targets: container,
+		    x: { from: container.x, to: data.x },
+		    y: { from: container.y, to: data.y },
+		    onStart: function () {if(container.getAt(2)){container.getAt(2).anims.play(anim, true);};},
+		    onComplete: function () {if(container.getAt(2) && (!container.tween || !container.tween.isPlaying())){container.getAt(2).anims.stop();};},
+		    // alpha: { start: 0, to: 1 },
+		    // alpha: 1,
+		    // alpha: '+=1',
+		    ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+		    duration: duration,
+		    repeat: 0,            // -1: infinity
+		    yoyo: false
+		});
+		container.tween=tween;
+    });
+
+    Client.socket.on('move_pushable',function(data){
+		if(finalizando){return;};
+    	//console.log("move_pushable:"+data.length);
+    	for(var i=0;i<data.length;i++)
+    	{
+    		var p=data[i];
+    		var pushable = pushables[p.id];
+
+    		//console.log("JOJO:"+p.prim+","+pushable.wo_tmov);
+    		    		if(p.prim==0 && pushable.wo_tmov=="local")
+    		{
+    			continue;
+    		}
+
+			//console.log("move pushable id: "+p.id);
+		    //if(pushable.wo_tmov!="remote"){pushable.wo_tmov_ult=Date.now();};
+		    pushable.wo_tmov="remote";
+
+		    //console.log("ARA: "+p.id+" x:"+p.x+" y:"+p.y+" sp:"+p.sp);
+		    //console.log("ARA: "+p.id+" x:"+pushable.x+" xb:"+pushable.body.x+" sp:"+p.sp);
+
+			var p_sp=Math.max(p.sp,20);
+			var duration,vel;
+		    var distance = Phaser.Math.Distance.Between(pushable.x,pushable.y,p.x,p.y);
+		    if(distance>200 && p_sp>30){duration=distance/p_sp;}//Mateixa vel. que p_sp
+		    else if(distance>200 && p_sp<31){duration=distance/70;}
+		    else if(distance<201 && p_sp>30){duration=distance/p_sp;}//Mateixa vel. que p_sp
+		    else{duration=distance/p_sp;}//Mateixa vel. que p_sp
+
+			var vel_aux=distance/duration;
+			//console.log("move pushable remot:"+p.id+" dist:"+distance+" speed remot:"+p_sp+" speed local:"+vel_aux);
+		    if(vel_aux>30){vel="_3";}
+			else if(vel_aux>10){vel="_2";}
+			else{vel="_1";}
+
+			duration=duration*1000;
+		    /*
+		    if(distance>50 && distance>p.sp*2)
+			{
+				duration = distance*10;
+				vel="_3";
+			}
+		    else
+		    {
+		    	duration = distance*(100-Math.min(Math.max(p.sp,8),90));
+				if(p.sp>30){vel="_3";}
+				else if(p.sp>10){vel="_2";}
+				else{vel="_1";}
+		    }
+		    */
+
+			if(pushable.es_anim==1)
+			{
+			    var anim="";
+			    if(p.x<pushable.x){anim="esquerra_"+pushable.imagen+vel;pushable.flipX=true;}
+			    else if(p.x>pushable.x){anim="dreta_"+pushable.imagen+vel;pushable.flipX=false;}
+			    else if(p.y<pushable.y){anim="adalt_"+pushable.imagen+vel;}
+			    else{anim="abaix_"+pushable.imagen+vel;};
+			};
+
+			var tween = escena.tweens.add({
+			    targets: pushable,
+			    x: { from: pushable.x, to: p.x },
+			    y: { from: pushable.y, to: p.y },
+			    onStart: function () {if(pushable.es_anim==1){pushable.anims.play(anim, true);};},
+			    onComplete: function () {if(pushable.es_anim==1 && (!pushable.tween || !pushable.tween.isPlaying())){pushable.anims.stop();};},
+			    ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+			    duration: duration,
+			    repeat: 0,            // -1: infinity
+			    yoyo: false
+			});
+			pushable.tween=tween;
+		}
+    });
+    
+    $("#divloader").hide();
+    escena.cameras.main.fadeIn(200);
+
+});//Del 'allplayers'
+
+////////////// FI IO /////////////////
+
+function preload()
+{
+	escena=this;
+		
+    loadingText = this.make.text({
+        x: this.cameras.main.width / 2,
+        y: this.cameras.main.height / 2 - 50,
+        text: "3333",
+        style: {
+            font: '20px monospace',
+            fill: '#ffffff'
+        }
+    });
+    loadingText.setOrigin(0.5, 0.5);
+
+    var x_orig=this.cameras.main.width/2-160;
+    var y_orig=this.cameras.main.height/2-25;
+	loading_progressBar = this.add.graphics();
+	loading_progressBox = this.add.graphics();
+	loading_progressBox.fillStyle(0x222222, 0.8);
+	loading_progressBox.fillRect(x_orig, y_orig, 320, 50);
+    this.load.on('progress', function (value) {
+        loading_progressBar.clear();
+        loading_progressBar.fillStyle(0xffffff, 1);
+        loading_progressBar.fillRect(x_orig+10, y_orig+10, 300 * value, 30);
+    });
+    this.load.on('complete', function () {
+    	if(prim_pre_complete)
+    	{
+    		prim_pre_complete=false;
+	    	escena.cameras.main.fadeOut(0);
+	    	$("#divloader").show();
+	        loading_progressBar.destroy();
+	        loading_progressBox.destroy();
+	        loadingText.destroy();
+	    }
+    });
+
+	//this.load.baseURL = '';
+	//this.load.tilemapCSV("mapa_tm", "https://pixworld.io/assets/tilemap/tm188836_j2au9.txt");
+
+    this.load.spritesheet('av60','https://imgs1wo.e-droid3.net/assets/avatar/av60_w2at9.png?v=6',{ frameWidth: 32, frameHeight: 50 });
+    this.load.image('av60_b','https://imgs1wo.e-droid3.net/assets/avatar/av60_w2at9_b.png?v=6');    this.load.image('bubble','https://imgs1wo.e-droid3.net/img/bubble.png');
+
+     if(!this.sys.game.device.input.touch){this.load.image('arrowkeys',"https://imgs1wo.e-droid3.net/img/arrowkeys.png");}
+     else
+	 {
+	 	url_aux = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
+		this.load.plugin('rexvirtualjoystickplugin', url_aux, true);
+	};
+	
+	this.load.plugin('rexscaleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexscaleplugin.min.js', true);
+
+	
+		
+	this.load.image('img_info',"https://imgs1wo.e-droid3.net/img/info.png?v=3");
+
+ 		this.load.image('star', 'https://imgs1wo.e-droid3.net/img/star_p.png');
+
+    escena.load.image('skull',"https://imgs1wo.e-droid3.net/img/skull.png");escena.load.image('moneda',"https://imgs1wo.e-droid3.net/img/coin_48.png");
+
+
+    
+}
+
+/*function dumpJoyStickState() {
+    var cursorKeys = escena.joyStick.createCursorKeys();
+    var s = 'Key down: ';
+    for (var name in cursorKeys) {
+        if (cursorKeys[name].isDown) {
+            s += name + ' ';
+        }
+    }
+    s += '\n';
+    s += ('Force: ' + Math.floor(escena.joyStick.force * 100) / 100 + '\n');
+    s += ('Angle: ' + Math.floor(escena.joyStick.angle * 100) / 100 + '\n');
+    escena.text.setText(s);
+}*/
+
+function create()
+{
+	this.timer=0;
+
+	//platforms = this.physics.add.staticGroup();
+	//platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+
+	//COSES SOBRE EL MAPA
+	map = this.make.tilemap();
+	map.setBaseTileSize(32, 32);
+	map.widthInPixels=map_w;
+	map.heightInPixels=map_h;
+	map.width=map.widthInPixels/map.tileWidth;
+	map.height=map.heightInPixels/map.tileHeight;
+
+	group_obj=this.add.group();
+	group_pushable=this.add.group();
+	group_monedas=this.add.group();
+	group_enemies=this.add.group();
+	group_sprites = this.physics.add.group();
+		
+			avatars[60+""]={t_bullet:1,speed:65,shot_speed:60,
+		shot_damage_other:10,shot_damage_self:40,shot_w:40,shot_h:16,
+		cod:'w2at9',v:6,w:96,h:150,es_dyn:0,m:0};
+			avatars[104+""]={t_bullet:1,speed:30,shot_speed:40,
+		shot_damage_other:20,shot_damage_self:80,shot_w:34,shot_h:17,
+		cod:'kg5j3',v:3,w:141,h:147,es_dyn:0,m:0};
+			avatars[5416+""]={t_bullet:1,speed:50,shot_speed:50,
+		shot_damage_other:10,shot_damage_self:50,shot_w:20,shot_h:20,
+		cod:'328kg',v:2,w:93,h:147,es_dyn:0,m:0};
+			avatars[6127+""]={t_bullet:1,speed:45,shot_speed:45,
+		shot_damage_other:10,shot_damage_self:60,shot_w:38,shot_h:17,
+		cod:'zua36',v:3,w:144,h:144,es_dyn:0,m:0};
+	
+	
+//Camara
+// limit camera to map
+escena.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+escena.cameras.main.roundPixels = true; // avoid tile bleed
+escena.cameras.main.setBackgroundColor("#006600");
+
+//Outs
+
+
+//ara ho fem fora: group_obj=escena.add.group();
+
+
+
+
+	crear_anim("av60",false,"",10);
+
+  // Limitem moviment al tamany del tilemap
+  this.physics.world.bounds.width = map.widthInPixels;
+  this.physics.world.bounds.height = map.heightInPixels;
+
+    this.physics.add.collider(group_pushable, group_obj);
+    this.physics.add.collider(group_pushable, group_pushable,function (obj1, obj2)
+		{
+						if(obj2.body.speed>obj1.body.speed){var obj_aux=obj1;obj1=obj2;obj2=obj_aux;};
+
+			if(obj1.wo_tmov!=obj2.wo_tmov){obj2.wo_tmov_ult=Date.now();};
+			obj2.wo_tmov=obj1.wo_tmov;
+			if(obj1.wo_tmov=="local"){obj2.wo_tmov_prim=obj1.wo_tmov_prim;};
+		}
+	);
+
+	this.physics.add.overlap(group_sprites, group_monedas,function (obj1, obj2)
+			{
+								if(!obj1.es_sprite){var obj_aux=obj1;obj1=obj2;obj2=obj_aux;};
+
+								if(obj1.wo_id==idself)
+				{
+					var p_from=playerMap[obj1.wo_id];
+					p_from.mo+=obj2.valor;
+					if(p_from && p_from.text_mo)
+					{
+						p_from.text_mo.setText(p_from.mo);
+					};
+
+					Client.socket.emit('moneda_pickup',{col:obj2.col,fila:obj2.fila});
+				};
+				
+				obj2.texto.destroy(true);
+				group_monedas.remove(obj2,true,true);
+			}
+		);
+
+
+	/*
+  this.physics.add.overlap(
+    this.player,
+    object2,
+    function (_player, _object)
+    {
+        if (_player.body.velocity.x>0)
+        {
+		    object2.anims.play("right", true);
+		    object2.flipX = false;
+        }
+        else if (_player.body.velocity.y>0)
+        {
+		    object2.anims.play("down", true);
+        }
+    });
+  this.physics.add.collider(object1, object2);
+  */
+
+	/* Ara ho fem din els create_comun.php
+  //Camara
+  // limit camera to map
+  this.cameras.main.setBounds(0, 0, map_w,map_h);//map.widthInPixels, map.heightInPixels
+  this.cameras.main.roundPixels = true; // avoid tile bleed
+  this.cameras.main.setBackgroundColor("#006600");
+  */
+
+  
+    
+    
+    img_info=escena.add.image(this.scale.width-40, 40, "img_info").setDepth(999999).setScrollFactor(0).setInteractive().setVisible(false);
+  img_info.on('pointerdown', () => {falert(wc_txt_mapa);});
+
+  
+  // user input
+  if(!this.sys.game.device.input.touch)
+  {
+  	this.cursors = this.input.keyboard.createCursorKeys();
+  	escena.add.image(100, this.scale.height-70, "arrowkeys").setDepth(999999).setScrollFactor(0).alpha=0.8;
+  	var y_aux=0;sep_aux=40;
+			y_aux=20;sep_aux=30;
+		text_shot=escena.add.text(190,this.scale.height-(60-sep_aux)-y_aux, "Pulsa X para disparar",{fontFamily:"Raleway, sans-serif",fontSize:"18px",fontStyle:"bold",strokeThickness:2,stroke:"#000000"});
+		text_shot.setDepth(999999).setScrollFactor(0).alpha=0.8;
+		key_shot = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X,false,false);			    escena.add.text(190,this.scale.height-(60+sep_aux)-y_aux, "Utiliza las flechas de teclado para mover",{fontFamily:"Raleway, sans-serif",fontSize:"18px",fontStyle:"bold",strokeThickness:2,stroke:"#000000"}).setDepth(999999).setScrollFactor(0).alpha=0.8;
+    escena.add.text(190,this.scale.height-60-y_aux, "Pulsa cualquier tecla para enviar mensajes",{fontFamily:"Raleway, sans-serif",fontSize:"18px",fontStyle:"bold",strokeThickness:2,stroke:"#000000"}).setDepth(999999).setScrollFactor(0).alpha=0.8;
+    //escena.add.text(190,this.scale.height-200, "3333",{fontFamily:"Raleway, sans-serif",fontSize:"18px",fontStyle:"bold"}).setDepth(999999).setScrollFactor(0).alpha=0.8;
+  }
+  else
+  {
+	//Joystick
+	var radi=this.scale.width/10;
+	if(this.scale.height<this.scale.width){radi=this.scale.height/10;};
+
+	this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+                x: radi*2+20,
+                y: this.scale.height-(radi*2+20),
+                radius: radi,
+                base: this.add.circle(0, 0, radi*2, 0x888888),
+                thumb: this.add.circle(0, 0, radi, 0xcccccc),
+                // dir: '8dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+                // forceMin: 16,
+                // enable: true
+            });//.on('update', dumpJoyStickState, this);
+	this.joyStick.base.setDepth(999999);
+	this.joyStick.thumb.setDepth(999999);
+	this.joyStick.base.alpha=0.8;
+	this.joyStick.thumb.alpha=0.8;
+	//this.joyStick.base.on("pointerdown",joyStick_click,this);
+		
+	var graphics = this.add.graphics();
+    graphics.lineStyle(4, 0x000000, 1);
+    graphics.strokeCircle(radi*2+20, this.scale.height-(radi*2+20), radi*2).setScrollFactor(0).setDepth(999999);
+    
+	//var txt_tap=escena.add.image(radi*4+30,this.scale.height-(radi*2+50),'bubble').setDepth(999999).setScrollFactor(0);
+	var txt_tap=escena.add.image(radi*4+70,this.scale.height-(radi*2+10),'bubble').setDepth(999999).setScrollFactor(0).setScale(0.5);
+	txt_tap.alpha=0.8;
+	txt_tap.setInteractive().on('pointerdown', f_abrirchat,escena);
+	/*var txt_tap=escena.add.text(radi*4+30,this.scale.height-(radi*2+50), "\nToca para chat\n",{fontFamily:"Raleway, sans-serif",fontSize:"14px",fontStyle:"bold",strokeThickness:2,stroke:"#000000"}).setDepth(999999).setScrollFactor(0);
+	txt_tap.alpha=0.8;
+	txt_tap.setInteractive().on('pointerdown', f_abrirchat,escena);*/
+
+	/*this.text = this.add.text(0, 0);
+    dumpJoyStickState();*/
+  	this.cursors = this.joyStick.createCursorKeys();
+  	
+  	  		escena.input.addPointer(1);
+		var graphics = this.add.graphics();
+		radi=radi*0.8;
+		var x_aux=this.scale.width-(radi+20);
+		var y_aux=this.joyStick.y;
+		
+				graphics.fillStyle(0xcc0000, 0.8);
+		circle_shot_0=graphics.fillCircle(x_aux, y_aux, radi).setScrollFactor(0).setDepth(999999);
+	    graphics.lineStyle(4, 0x000000, 1);
+	    circle_shot_1=graphics.strokeCircle(x_aux, y_aux, radi).setScrollFactor(0).setDepth(999999);
+	    /*this.*/circle_shot = this.add.circle(x_aux, y_aux, radi).setScrollFactor(0).setInteractive();
+	    /*this.*/circle_shot.on('pointerdown', () => {
+			var info=shot(idself,orientation_self,avatars[playerMap[idself].idavatar+""].shot_speed);
+        	if(info!=null)
+        	{
+				Client.socket.emit('shot',info);
+			}
+		 });
+		  	
+  };
+
+    this.input.keyboard.on('keydown', function (event) {
+    	//console.log("keyCode:"+event.keyCode);
+    	
+    	if(event.keyCode===88 && !$("#divmsg").is(":visible") && avatars[playerMap[idself].idavatar+""].t_bullet==1)//x
+        {
+        	var info=shot(idself,orientation_self,avatars[playerMap[idself].idavatar+""].shot_speed);
+        	if(info!=null)
+        	{
+				Client.socket.emit('shot',info);
+			}
+        }
+		else if(event.keyCode>=48 && event.keyCode<90)
+        {
+        	f_abrirchat();
+        }
+        else if(event.keyCode===32 && $("#divmsg").is(":visible"))//espai en blanc
+        {
+       		$("#msg").val($("#msg").val()+" ");
+        }
+        else if(event.keyCode===13 && $("#divmsg").is(":visible"))//Enter
+        {
+       		f_enviarmsg();
+        }
+    });
+    
+	
+
+  Client.socket.emit('crear_jugador');
+
+	timedEvent = this.time.addEvent({ delay: 500, callback: env_player_pos, callbackScope: this, loop: true });
+	function env_player_pos()
+	{
+		if(finalizando){return;};
+		var info={};
+		var info_set=false;
+		if(this.container && (this.container.x!=x_old || this.container.y!=y_old))
+		{
+			x_old=this.container.x;y_old=this.container.y;
+			info["x"]=this.container.x;
+			info["y"]=this.container.y;
+			info_set=true;
+		};
+
+		var childs_a=[];
+		var childs_n=0;
+		group_pushable.children.iterate(function (child) {
+
+		        if(child.wo_tmov=="local" && (child.x!=child.x_old || child.y!=child.y_old))
+		        {
+		        	//console.log("enviem x:"+child.x+" y:"+child.y);
+		        	child.x_old=child.x;child.y_old=child.y;
+		        	childs_a[childs_n]={id:child.wo_id,x:child.x,y:child.y,sp:child.body.speed,prim:child.wo_tmov_prim};
+		        	child.wo_tmov_prim=0;
+		        	childs_n++;
+		        }
+		    });
+
+		if(childs_n>0)
+		{
+			//console.log("childs_a l:"+childs_n);
+			info["pushables"]=childs_a;
+			info_set=true;
+		};
+		
+		//Enviem la posicio dels enemics que ens segueixen
+		if(my_enemies)
+		{
+			var en_a=[];
+			var i=0;
+			group_enemies.children.iterate(function (child) {
+				if(my_enemies[child.wo_id])
+				{
+					//console.log("enviem id:"+child.wo_id+","+child.x+","+child.y);
+					en_a[i]={};
+					en_a[i]["en_id"]=child.wo_id;
+					en_a[i]["en_x"]=child.x;
+					en_a[i]["en_y"]=child.y;
+					i++;
+				};
+			});
+			if(en_a.length>0)
+			{
+				info["enemies"]=en_a;
+				info_set=true;
+			}
+		}
+
+		if(info_set){Client.socket.emit('player_pos',info);};
+	}
+	
+	
+}
+
+function update(time,delta)
+{
+	//if(finalizando && this.container && this.container.body){this.container.body.setVelocity(0);};
+
+	if(finalizando || !this.player || !this.container || !this.container.body){return;};
+
+    /*this.timer+=delta;
+    if(this.timer>1000) {
+        this.timer -= 1000;
+    }*/
+    
+       	var player_col=Math.max(Math.ceil((this.container.body.x+this.container.body.width/2)/map.tileWidth)-1,0);
+	var player_fila=Math.max(Math.ceil((this.container.body.y+this.container.body.height/2)/map.tileHeight)-1,0);
+	//console.log("col:"+player_col+" fila:"+player_fila);
+	
+	if(!cambio_tileini && tileini_x!=-1 && tileini_y!=-1 && (tileini_x!=player_col || tileini_y!=player_fila))
+	{
+		//console.log("cambio_tileini true");
+		cambio_tileini=true;
+	}
+	
+	if(!cambio_tilegen && tilegen_x!=-1 && tilegen_y!=-1 && (tilegen_x!=player_col || tilegen_y!=player_fila))
+	{
+		//console.log("cambio_tilegen true");
+		cambio_tilegen=true;
+	}
+
+	if(outs[player_col] && outs[player_col][player_fila])
+	{
+		//console.log(":"+outs[player_col][player_fila][0]);
+		if(outs[player_col][player_fila][0]>0)
+		{
+						if(cambio_tileini && cambio_tilegen)
+			{
+				cambio_tilegen=false;
+				tilegen_x=player_col;
+				tilegen_y=player_fila;
+				cambio_mapa(outs[player_col][player_fila][0],false);			};
+		}
+		else
+		{
+						finalizando=true;
+
+			this.container.body.setEnable(false);//Per a que no es mogui si p.ex. li toque un pushable
+			this.player.anims.stop();
+			this.container.body.setVelocity(0);
+		    if(!this.particles){this.particles = this.add.particles('star');};
+		    this.emitter = this.particles.createEmitter();
+		    this.emitter.setPosition(this.container.body.x+this.container.body.width/2, this.container.body.y+this.container.body.height/2);
+		    this.emitter.setSpeed(200);
+		    this.emitter.setFrequency(200);
+		    //this.emitter.maxParticles=20;
+		    this.emitter.setGravityY(300);
+		    this.emitter.setEmitterAngle({ min: -135, max: -45 });
+		    this.emitter.setBlendMode(Phaser.BlendModes.ADD);
+
+			Client.socket.emit('player_tz');
+			
+			setTimeout(f_player_tz,3000);
+
+			return;
+		}
+	}
+
+			//Desactivem les bales que ja no es veuen
+		var keys_aux=Object.keys(groups_balas_av);
+		for(var i=0;i<keys_aux.length;i++)
+		{
+			groups_balas_av[keys_aux[i]].children.iterate(function (child) {
+				if(child.active)
+				{
+					//console.log("child x:"+child.body.x);
+			        if(child.body.x<-100 || child.body.y<-100 || child.body.x>map_w+100 || child.body.y>map_h+100)
+			        {
+						//console.log("elim bala");
+						groups_balas_av[keys_aux[i]].killAndHide(child);
+			        }
+			    };
+		    });
+		    //en proves: groups_balas_av[keys_aux[i]].rotate(0.1);
+		}
+		
+		
+		var keys_aux=Object.keys(groups_balas);
+		for(var i=0;i<keys_aux.length;i++)
+		{
+			groups_balas[keys_aux[i]].children.iterate(function (child) {
+				if(child.active)
+				{
+					//console.log("child x:"+child.body.x);
+			        if(child.body.x<-100 || child.body.y<-100 || child.body.x>map_w+100 || child.body.y>map_h+100)
+			        {
+						//console.log("elim bala");
+						groups_balas[keys_aux[i]].killAndHide(child);
+			        }
+			    };
+		    });
+		}
+	
+  if(this.cursors.up.isDown && !this.cursors.left.isDown && !this.cursors.right.isDown){orientation_self=270;}
+  else if(this.cursors.up.isDown && this.cursors.left.isDown){orientation_self=225;}
+  else if(this.cursors.up.isDown && this.cursors.right.isDown){orientation_self=315;}
+  else if(this.cursors.down.isDown && !this.cursors.left.isDown && !this.cursors.right.isDown){orientation_self=90;}
+  else if(this.cursors.down.isDown && this.cursors.left.isDown){orientation_self=135;}
+  else if(this.cursors.down.isDown && this.cursors.right.isDown){orientation_self=45;}
+  else if(this.cursors.right.isDown && !this.cursors.up.isDown && !this.cursors.down.isDown){orientation_self=0;}
+  else if(this.cursors.left.isDown && !this.cursors.up.isDown && !this.cursors.down.isDown){orientation_self=180;};
+
+
+	if(!this.player || !this.container || !this.container.body){return;};
+
+  // Stop any previous movement from the last frame
+  this.container.body.setVelocity(0);
+
+  speed=0;
+  if(!pausado)
+  {
+  	  speed=avatars[playerMap[idself].idavatar+""].speed*2;
+
+	  // Horizontal movement
+	  if (this.cursors.left.isDown) {
+	    this.container.body.setVelocityX(-speed);
+	  } else if (this.cursors.right.isDown) {
+	    this.container.body.setVelocityX(speed);
+	  }
+	  // Vertical movement
+	  if (this.cursors.up.isDown) {
+	    this.container.body.setVelocityY(-speed);
+	  } else if (this.cursors.down.isDown) {
+	    this.container.body.setVelocityY(speed);
+	  }
+
+	  // Normalize and scale the velocity so that player can't move faster along a diagonal
+	  this.container.body.velocity.normalize().scale(speed);
+
+	  //Animacions Avatar propi
+	  if(escena.anims.exists("esquerra_av"+playerMap[idself].idavatar))//psac
+	  {
+		  if (this.cursors.left.isDown) {
+		    this.player.anims.play("esquerra_av"+playerMap[idself].idavatar, true);
+		    this.player.flipX = true;
+		  } else if (this.cursors.right.isDown) {
+		    this.player.anims.play("dreta_av"+playerMap[idself].idavatar, true);
+		    this.player.flipX = false;
+		  } else if (this.cursors.up.isDown) {
+		    this.player.anims.play("adalt_av"+playerMap[idself].idavatar, true);
+		  } else if (this.cursors.down.isDown) {
+		    this.player.anims.play("abaix_av"+playerMap[idself].idavatar, true);
+		  } else {
+		    this.player.anims.stop();
+		    }
+		};
+  }
+  else
+  {
+	  this.player.anims.stop();
+  }
+
+	//Animacions enemies
+	var d = new Date();
+	var ts=d.getTime();
+	var coords_ocupadas=[];
+
+	group_enemies.children.iterate(function (child) {
+			
+			if(child.muerto){return;};
+		    var dist_objectiu=0;
+		    if(child.objectiu && playerMap[child.objectiu] && playerMap[child.objectiu].container && playerMap[child.objectiu].container.getAt(2))
+		    {
+				var objectiu_x=playerMap[child.objectiu].container.x+playerMap[child.objectiu].container.getAt(2).x;
+				var objectiu_y=playerMap[child.objectiu].container.y+playerMap[child.objectiu].container.getAt(2).y;
+				dist_objectiu=Phaser.Math.Distance.Between(child.x,child.y,objectiu_x,objectiu_y);
+		    };
+
+			if(child.prop.sp>0 && child.isFollowing())
+			{
+				//console.log("enemy varios:"+(playerMap[child.objectiu].container.x+playerMap[child.objectiu].container.getAt(2).x));
+
+				child.hb.bar.x=child.x-40;
+				child.hb.bar.y=child.y-child.hb_offset;
+				
+
+				var continuar=true;
+								if(child.prop.s_m_p>0 && child.objectiu)
+				{
+					if(dist_objectiu<child.prop.s_m_p)
+					{
+						if(child.es_anim==1){child.anims.stop();};
+						child.stopFollow();
+						continuar=false;
+					}
+				}
+				
+				/*
+				//Si hi ha un altre enemy aprop el parem
+				if(continuar)
+				{
+					//var punt_final=child.path.getEndPoint();
+					for(var i=0;i<coords_ocupadas.length-1;i++)
+					{
+						if(ara){console.log("dist i:"+i+","+child.x+","+child.y+","+coords_ocupadas[i].x+","+coords_ocupadas[i].y+","+" d:"+Phaser.Math.Distance.Between(child.x,child.y,coords_ocupadas[i].x,coords_ocupadas[i].y));};
+						if(Phaser.Math.Distance.Between(child.x,child.y,coords_ocupadas[i].x,coords_ocupadas[i].y)<50)
+						{
+							if(child.es_anim==1){child.anims.stop();};
+							child.stopFollow();
+							continuar=false;
+							break;
+						}
+					}
+				}
+				*/
+
+				if(continuar && child.es_anim==1)
+				{
+										if(child.prop.sp>80){speed="_3";}
+					else if(child.prop.sp>40){speed="_2";}
+					else{speed="_1";}
+
+					//if(Math.abs(child.pathDelta.x)>Math.abs(child.pathDelta.y))
+					if(Math.abs(child.pathDelta.x)>0)
+					{
+					  if (child.pathDelta.x<0) {
+					  	//console.log("play esquerra_"+child.imagen+speed);
+					    child.anims.play("esquerra_"+child.imagen+speed, true);
+					    child.flipX = true;
+					  } else{
+					    child.anims.play("dreta_"+child.imagen+speed, true);
+					    child.flipX = false;
+						}
+					}
+					else
+					{
+					  if (child.pathDelta.y<0) {
+					    child.anims.play("adalt_"+child.imagen+speed, true);
+					  } else{
+					    child.anims.play("abaix_"+child.imagen+speed, true);
+						}
+					};
+				};
+
+			}
+			else
+			{
+				if(child.es_anim==1){child.anims.stop();};
+			}
+
+			//////////////////////////////////////////////////////////
+		    //Mirem si te que disparar(nomes controlem lo que segueix al self)
+		    //////////////////////////////////////////////////////////
+		    if(child.objectiu && child.objectiu==idself)
+		    {
+		    	//console.log("s_m_d:"+child.prop.s_m_d+" dist_objectiu:"+dist_objectiu+ "ts:"+ts+" "+child.fult_shot+","+child.prop.s_f);
+		    	var s_f=Math.max(100-child.prop.s_f,5);
+		    	if((child.prop.s_m_d==0 || dist_objectiu<child.prop.s_m_d) && (ts-child.fult_shot>s_f*20))
+		    	{
+		    		//Si es_anim nomes pot disparar depenen del seu "path" i "orientacio" actual. Si no, pot disparar sempre
+		    		//Obtenim angle absolut entre el enemy i lobjectiu, i mirem si es compatible amb la orientacio del enemy
+		    		var ok=false;//Diu si pot disparar
+		    		
+					//Obtenim angle de 0-360 (0 sempre comence a la dreta)
+		    		var angle=Phaser.Math.Angle.Between(child.x,child.y,objectiu_x,objectiu_y);
+					angle=Phaser.Math.RadToDeg(angle);
+					if(angle<0){angle=180+(180-(angle*-1));};
+
+					//Si no sesta movent i es_anim, primer el orientem cap al objectiu
+					if(child.es_anim &&
+						(child.prop.sp==0 || (child.prop.sp>0 && !child.isFollowing()))
+					)
+					{
+						if(angle>=315 || angle<45){child.setFrame(1);child.flipX=false;}
+					    else if(angle>=45 && angle<135){child.setFrame(0);}
+					    else if(angle>=135 && angle<225){child.setFrame(1);child.flipX=true;}
+					    else{child.setFrame(2);};
+					    if(child.prop.s_a==-1){ok=true;};//Despres de oriental segur que pot disparar
+					}
+		    		
+		    		if(!ok)
+		    		{
+		    			//console.log(child.s_a+","+child.es_anim);
+			    		var ori=child.prop.s_a;
+			    		if(ori==-1)//Si NO es -1 llavors no cal mirar res mes pq. s_a conte cap a on pot disparar
+			    		{
+				    		if(!child.es_anim){ok=true;}
+				    		else
+				    		{
+								  if(child.pathDelta.x>0 && child.pathDelta.y==0){ori=0;}
+								  else if(child.pathDelta.x>0 && child.pathDelta.y>0){ori=45;}
+								  else if(child.pathDelta.x==0 && child.pathDelta.y>0){ori=90;}
+								  else if(child.pathDelta.x<0 && child.pathDelta.y>0){ori=135;}
+								  else if(child.pathDelta.x<0 && child.pathDelta.y==0){ori=180;}
+								  else if(child.pathDelta.x<0 && child.pathDelta.y<0){ori=225;}
+								  else if(child.pathDelta.x==0 && child.pathDelta.y<0){ori=270;}
+								  else{ori=315;};
+								  
+									if(ori==0 && (angle>=315 || angle<=45)){ok=true;}
+									else if(ori==90 && (angle>=45 && angle<=135)){ok=true;}
+									else if(ori==180 && (angle>=135 && angle<=225)){ok=true;}
+									else if(ori==270 && (angle>=225 && angle<=315)){ok=true;}
+									//punts intermitjos
+									else if(ori==45 && (angle>=0 || angle<=90)){ok=true;}
+									else if(ori==135 && (angle>=90 && angle<=180)){ok=true;}
+									else if(ori==225 && (angle>=180 && angle<=270)){ok=true;}
+									else if(ori==315 && (angle>=270 && angle<=360)){ok=true;};
+									//console.log("frame:"+child.anims.currentAnim.key+" "+ok);
+					    	};
+			    		}
+			    		else
+			    		{
+			    			//console.log(ori+","+angle);
+			    			var diff = ori - angle
+							diff = Math.abs(mod((diff + 180),360) - 180);							//if(Math.floor((Math.random() * 10) + 1)==5){console.log(diff);};
+							if(diff<30)
+							{
+								ok=true;
+								angle=ori;							};
+			    		}
+			    	};
+			    	
+					if(ok)
+					{
+	  					child.fult_shot=ts;
+						var info=shot_from_enemy(child,angle,child.prop.s_s);
+			        	if(info!=null)
+			        	{
+							Client.socket.emit('shot_e',info);
+						}
+					}
+		    	}
+
+		    }
+	});
+
+	//Animacions pushables
+	group_pushable.children.iterate(function (child) {
+		if(child.es_anim==1)
+		{
+			//console.log("speed "+child.imagen+": "+child.body.speed);
+			if(child.body.speed==0 &&
+				(child.wo_tmov!="remote" ||
+					(child.wo_tmov=="remote" && (!child.tween || !child.tween.isPlaying()))
+				)
+			){child.anims.stop();}//Tant si es remot com no el parem
+			else if(child.wo_tmov!="remote")//Nomes apliquem anim si es local
+			{
+				/*var speed = Math.min(1, Math.max(Math.abs(child.body.velocity.x),
+				                Math.abs(child.body.velocity.y)) / 200) * 9;*/
+				//console.log("speed "+child.imagen+": "+child.body.speed);
+
+				if(child.body.speed>30){speed="_3";}
+				else if(child.body.speed>10){speed="_2";}
+				else{speed="_1";}
+
+				if(Math.abs(child.body.velocity.x)>Math.abs(child.body.velocity.y))
+				{
+				  if (child.body.velocity.x<0) {
+				  	//console.log("play esquerra_"+child.imagen+speed);
+				    child.anims.play("esquerra_"+child.imagen+speed, true);
+				    child.flipX = true;
+				  } else{
+				    child.anims.play("dreta_"+child.imagen+speed, true);
+				    child.flipX = false;
+					}
+				}
+				else
+				{
+				  if (child.body.velocity.y<0) {
+				    child.anims.play("adalt_"+child.imagen+speed, true);
+				  } else{
+				    child.anims.play("abaix_"+child.imagen+speed, true);
+					}
+				};
+
+
+			}
+		}
+
+	});
+}
+
+</script>
+
+</body>
+</html>
