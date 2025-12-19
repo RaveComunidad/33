@@ -13,6 +13,384 @@
 	<script src="mejoras-movil.js"></script>
 		<script src="https://imgs1wo.e-droid3.net/js/swiper/7.0.1_swiper-bundle.min.js"></script>
     <style>
+
+		.swiper {
+  width:300px;
+  height: 100%;
+  background-image:url(https://pixworld.io/img/fondo_avatars_4.png);
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 14px;
+
+  height:180px;
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+img.av{max-width:50px;max-height:50px;user-select:none;}
+.font_literal{font-size:large;font-weight:bold;}
+.font_literal_g{font-size:x-large;font-weight:bold;}
+.font_literal_p{font-size:small;}
+.font_literal_pp{font-size:x-small;}
+.boto{padding:10px 20px;border:none;background:none;background-color:#4CAF50;color:#FAFAFA;cursor:pointer;}
+.boto_g{padding:10px 20px;border:none;background:none;background-color:#4CAF50;color:#FAFAFA;font-size:large;cursor:pointer;}
+.boto_cancel{padding:10px 20px;border:none;background:none;background-color:#E0E0E0;color:#212121;font-size:large;cursor:pointer;}
+
+.tprinc{width:80%;max-width:400px;margin-top:50px;border:0;}
+@media all and (max-height: 500px){
+  .tprinc{margin-top:10px;}
+}
+
+/*Modal*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+	font-family:arial;
+	font-size:medium;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+@media all and (max-width: 500px){
+  .modal-content{width:80%;}
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+</style>
+</head>
+<body style="margin:0;background-color:#E1F5FE;font-family:'Raleway', sans-serif">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_ES/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<script language="javascript">
+var av_a=[];
+av_a[0]=60;
+av_a[1]=104;
+av_a[2]=5416;
+av_a[3]=6127;
+var av_depago="";
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var expires="expires=";
+    if(exdays>0)
+	{
+		var d = new Date();
+		d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    	expires = "expires="+ d.toUTCString();
+    }
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/; samesite=None; Secure";
+}
+
+
+$(document).ready(function(){
+	
+});
+
+
+function falert(cad)
+{
+	document.getElementById("modaltxt").innerHTML=cad;
+	document.getElementById('divmodal').style.display="block";
+}
+
+function onSubmit(token) {
+	$("#diverr").hide();
+
+		$("#idplayer").val("");
+	$("#ids").val("");
+
+			if($("#nick").val().trim()=="")
+		{
+			$("#diverr").html("Por favor introduce un Nick");
+			$("#diverr").show();
+			return false;
+		};
+	
+	if(av_depago.indexOf(","+swiper.activeIndex+",")!=-1)
+	{
+				    falert("Juega y obtén monedas para seleccionar este avatar");
+				return false;
+	}
+	
+	$("#loader").css('visibility', 'visible');
+
+	$("#idav").val(av_a[swiper.activeIndex]);
+	
+	setCookie("av_player",$("#idav").val(),365*10);
+	
+    $.ajax({
+      type: "POST",
+      url: "https://pixworld.io/js/dom_access.php?tk="+token,
+      data: $("#fapp").serialize(),
+      success: function(result) {
+      	//alert(result);
+		var pos=result.indexOf("-OK- -IDS:");
+		if(pos!==-1)
+		{
+			pos+=10;
+			var pos2=result.indexOf("-",pos);
+			var ids=result.substring(pos,pos2);
+			var pos=result.indexOf("-IDP:");
+			if(pos!==-1)
+			{
+				pos+=5;
+				var pos2=result.indexOf("-",pos);
+				var idp=result.substring(pos,pos2);
+
+								$("#idplayer").val(idp);
+				$("#ids").val(ids);
+				$("#fapp").submit();
+			}
+		}
+		else if(result.indexOf("-KO- -NICKREPE-")!=-1)
+		{
+			$("#diverr").html("El Nick introducido no está disponible");
+			$("#diverr").show();
+		}
+		else if(result.indexOf("-KO-")!=-1)
+		{
+			$("#diverr").html("No es posible acceder en estos momentos");
+			$("#diverr").show();
+		};
+		$("#loader").css('visibility', 'hidden');
+      }
+     });
+
+	return false;
+}
+</script>
+
+<div id="divmodal" class="modal" style="display:none;" onclick="this.style.display='none';">
+  <div id="divmodalcontent" class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modaltxt"></p>
+  </div>
+</div>
+
+<div id="diverr" align="center" style="display:none;background-color:#D32F2F;color:#FFFFFF;margin:50px auto;padding:20px;width:80%;">
+</div>
+
+	<form id="fapp" name="fapp" method="post" action="https://pixworld.io/leviathamforo/?play=1">		<input type="hidden" name="enviado" value="1">
+	<input type="hidden" id="idplayer" name="idplayer" value="">
+	<input type="hidden" id="ids" name="ids" value="">
+
+	<input type="hidden" name="idapp" value="127596">
+	<input type="hidden" id="idav" name="idav" value="">
+<table class="tprinc" align="center">
+<tr><td style="padding-left:5px;height:30px;"><div class="fb-like" data-href="https://pixworld.io/leviathamforo" data-send="false" data-width="390" data-show-faces="false"></div></td></tr><tr><td>
+<table style="width:100%;border-radius:10px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background-color:#F5F5F5;border:2px solid #01579B;padding:20px;" align="center">
+	
+<tr>
+<td colspan="2" align="center" class="font_literal_g">3333</td>
+</tr>
+<tr>
+<td colspan="2" style="height:10px"></td>
+</tr>
+			<tr>
+		<td class="font_literal" style="width:1%">Nick</td>
+		<td>&nbsp;<input class="font_literal" style="width:200px;max-width:100%" type="text" name="nick" id="nick" value="fffff" required maxlength="12"></td>
+		</tr>
+		<tr class="tr_av">
+	<td colspan="2" style="height:10px"></td>
+	</tr>
+	<tr class="tr_av">
+	<td colspan="2" class="font_literal">Avatar</td>
+	</tr>
+	<tr class="tr_av">
+	<td colspan="2" align="center">
+	 <!-- Swiper -->
+	  <div class="swiper">
+	    <div class="swiper-wrapper">
+	        <div class="swiper-slide">
+				<table style="border:0;" align="center" cellpadding="0" cellspacing="0">								<tr>
+				<td style="height:52px;padding:0"><img src="https://imgs1wo.e-droid3.net/assets/avatar/av60_w2at9_st.png?v=6" class="av" style="margin:0;padding:0;"></td>
+				</tr>
+										<tr>
+						<td align="center" style="padding:2px 0 0 0;">Velocidad</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:33px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Disparo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:5px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Escudo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:20px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+									</table>
+				</div>
+	        <div class="swiper-slide">
+				<table style="border:0;" align="center" cellpadding="0" cellspacing="0">								<tr>
+				<td style="height:52px;padding:0"><img src="https://imgs1wo.e-droid3.net/assets/avatar/av104_kg5j3_st.png?v=3" class="av" style="margin:0;padding:0;"></td>
+				</tr>
+										<tr>
+						<td align="center" style="padding:2px 0 0 0;">Velocidad</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:15px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Disparo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:10px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Escudo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:40px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+									</table>
+				</div>
+	        <div class="swiper-slide">
+				<table style="border:0;" align="center" cellpadding="0" cellspacing="0">								<tr>
+				<td style="height:52px;padding:0"><img src="https://imgs1wo.e-droid3.net/assets/avatar/av5416_328kg_st.png?v=2" class="av" style="margin:0;padding:0;"></td>
+				</tr>
+										<tr>
+						<td align="center" style="padding:2px 0 0 0;">Velocidad</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:25px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Disparo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:5px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Escudo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:25px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+									</table>
+				</div>
+	        <div class="swiper-slide">
+				<table style="border:0;" align="center" cellpadding="0" cellspacing="0">								<tr>
+				<td style="height:52px;padding:0"><img src="https://imgs1wo.e-droid3.net/assets/avatar/av6127_zua36_st.png?v=3" class="av" style="margin:0;padding:0;"></td>
+				</tr>
+										<tr>
+						<td align="center" style="padding:2px 0 0 0;">Velocidad</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:23px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Disparo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:5px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+											<tr>
+						<td align="center" style="padding:2px 0 0 0;">Escudo</td>
+						</tr>
+						<tr>
+						<td align="center" style="white-space:nowrap;padding:0;line-height:5px;"><div align="left" style="width:50px;height:5px;background-color:#CCCCCC;"><div style="width:30px;height:5px;background-color:green;"></div></div></td>
+						</tr>
+									</table>
+				</div>
+	        	    </div>
+		<!-- Add Arrows -->
+		<div class="swiper-button-prev" style="color:#F44336;"></div>
+		<div class="swiper-button-next" style="color:#F44336;"></div>
+	  </div>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2" style="height:30px"></td>
+	</tr>
+	<tr>
+	<td colspan="2" align="center">
+	<button id="btnenv" class="g-recaptcha boto_g" style="margin-left:26px;margin-right:10px;"
+	    data-sitekey="6LfIxAQaAAAAAJ-vixcHTwCaOvnhzMcQreF1XGQo"
+	    data-callback='onSubmit'
+	    data-action='submit'>Acceder</button><img id="loader" src="https://imgs1wo.e-droid3.net/img/loader.gif" style="visibility:hidden;border:0;width:16px;">
+	</td>
+	</tr>
+</table>
+</td></tr>
+<tr><td><a class="font_literal_p" style="text-decoration:none;color:#133E85;" href="https://pixworld.io" title="Crea juegos multijugador o chats 2D">Pixworld.io</a></td></tr>
+</table>
+	</form>
+
+	<!-- Initialize Swiper -->
+	<script language="javascript">
+	const swiper = new Swiper('.swiper', {
+	  slidesPerView: 4,
+	  spaceBetween: 80,
+	  centeredSlides: true,
+	  slideToClickedSlide: true,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      }
+	 	});
+	
     .centrat{
 		position: absolute;
 	    top: 50%;
@@ -2474,4 +2852,5 @@ function update(time,delta)
 
 </body>
 </html>
+
 
